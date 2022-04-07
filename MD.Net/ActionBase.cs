@@ -9,6 +9,8 @@
 
         public IDevice Device { get; private set; }
 
-        public abstract void Apply(IToolManager toolManager);
+        public abstract string Description { get; }
+
+        public abstract void Apply(IToolManager toolManager, IStatus status);
     }
 }

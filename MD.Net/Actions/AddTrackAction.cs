@@ -1,4 +1,7 @@
-﻿namespace MD.Net
+﻿using MD.Net.Resources;
+using System.IO;
+
+namespace MD.Net
 {
     public class AddTrackAction : TrackAction
     {
@@ -7,7 +10,15 @@
 
         }
 
-        public override void Apply(IToolManager toolManager)
+        public override string Description
+        {
+            get
+            {
+                return string.Format(Strings.AddTrackAction_Description, Path.GetFileName(this.UpdatedTrack.Location));
+            }
+        }
+
+        public override void Apply(IToolManager toolManager, IStatus status)
         {
             var output = default(string);
             var error = default(string);

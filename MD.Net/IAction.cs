@@ -4,6 +4,8 @@
     {
         IDevice Device { get; }
 
-        void Apply(IToolManager toolManager);
+        string Description { get; }
+
+        void Apply(IToolManager toolManager, IStatus status);
     }
 }

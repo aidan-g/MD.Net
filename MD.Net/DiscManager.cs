@@ -61,16 +61,23 @@ namespace MD.Net
         public IResult ApplyActions(IDevice device, IActions actions, IStatus status)
         {
             var message = default(string);
+            var position = 0;
+            var count = actions.Count;
             foreach (var action in actions)
             {
+                status.Update(action.Description, position, count, StatusType.Action);
                 try
                 {
-                    action.Apply(this.ToolManager);
+                    action.Apply(this.ToolManager, status);
                 }
                 catch (Exception e)
                 {
                     message = e.Message;
                     break;
+                }
+                finally
+                {
+                    position++;
                 }
             }
             if (!string.IsNullOrEmpty(message))

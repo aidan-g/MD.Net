@@ -1,4 +1,6 @@
-﻿namespace MD.Net
+﻿using MD.Net.Resources;
+
+namespace MD.Net
 {
     public class UpdateDiscTitleAction : DiscAction
     {
@@ -7,7 +9,15 @@
 
         }
 
-        public override void Apply(IToolManager toolManager)
+        public override string Description
+        {
+            get
+            {
+                return string.Format(Strings.UpdateDiscTitleAction_Description, this.UpdatedDisc.Title);
+            }
+        }
+
+        public override void Apply(IToolManager toolManager, IStatus status)
         {
             var output = default(string);
             var error = default(string);
