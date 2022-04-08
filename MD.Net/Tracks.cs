@@ -72,6 +72,50 @@ namespace MD.Net
             return this.Store.GetEnumerator();
         }
 
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as ITracks);
+        }
+
+        public virtual bool Equals(ITracks other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            if (object.ReferenceEquals(this, other))
+            {
+                return true;
+            }
+            if (!Enumerable.SequenceEqual(this, other))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public static bool operator ==(Tracks a, Tracks b)
+        {
+            if ((object)a == null && (object)b == null)
+            {
+                return true;
+            }
+            if ((object)a == null || (object)b == null)
+            {
+                return false;
+            }
+            if (object.ReferenceEquals((object)a, (object)b))
+            {
+                return true;
+            }
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(Tracks a, Tracks b)
+        {
+            return !(a == b);
+        }
+
         public static ITracks None
         {
             get

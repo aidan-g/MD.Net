@@ -4,7 +4,7 @@ namespace MD.Net
 {
     public class Disc : IDisc
     {
-        public Disc(IDisc disc) 
+        public Disc(IDisc disc)
         {
             this.Title = disc.Title;
             this.RecordedTime = disc.RecordedTime;
@@ -36,6 +36,50 @@ namespace MD.Net
 
         public ITracks Tracks { get; }
 
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as IDisc);
+        }
+
+        public virtual bool Equals(IDisc other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            if (object.ReferenceEquals(this, other))
+            {
+                return true;
+            }
+            if (!string.Equals(this.Id, other.Id, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public static bool operator ==(Disc a, Disc b)
+        {
+            if ((object)a == null && (object)b == null)
+            {
+                return true;
+            }
+            if ((object)a == null || (object)b == null)
+            {
+                return false;
+            }
+            if (object.ReferenceEquals((object)a, (object)b))
+            {
+                return true;
+            }
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(Disc a, Disc b)
+        {
+            return !(a == b);
+        }
+
         public static IDisc None
         {
             get
@@ -50,6 +94,10 @@ namespace MD.Net
             unchecked
             {
                 id += disc.Title.GetHashCode();
+                foreach (var track in disc.Tracks)
+                {
+                    id += track.Id.GetHashCode();
+                }
             }
             return Math.Abs(id).ToString();
         }

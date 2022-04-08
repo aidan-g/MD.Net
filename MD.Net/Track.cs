@@ -43,6 +43,50 @@ namespace MD.Net
             return new Track(this);
         }
 
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as ITrack);
+        }
+
+        public virtual bool Equals(ITrack other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            if (object.ReferenceEquals(this, other))
+            {
+                return true;
+            }
+            if (!string.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public static bool operator ==(Track a, Track b)
+        {
+            if ((object)a == null && (object)b == null)
+            {
+                return true;
+            }
+            if ((object)a == null || (object)b == null)
+            {
+                return false;
+            }
+            if (object.ReferenceEquals((object)a, (object)b))
+            {
+                return true;
+            }
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(Track a, Track b)
+        {
+            return !(a == b);
+        }
+
         public static ITrack None
         {
             get

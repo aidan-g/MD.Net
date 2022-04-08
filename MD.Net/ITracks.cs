@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MD.Net
 {
-    public interface ITracks : IEnumerable<ITrack>
+    public interface ITracks : IEnumerable<ITrack>, IEquatable<ITracks>
     {
         ITrack this[int position] { get; }
 

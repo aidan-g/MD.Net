@@ -2,7 +2,7 @@
 
 namespace MD.Net
 {
-    public interface IDisc
+    public interface IDisc : IEquatable<IDisc>
     {
         string Id { get; }
 

@@ -70,6 +70,15 @@ namespace MD.Net.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The source disc was modified, cannot update..
+        /// </summary>
+        internal static string Error_DiscWasModified {
+            get {
+                return ResourceManager.GetString("Error.DiscWasModified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Deleting track: {0}.
         /// </summary>
         internal static string RemoveTrackAction_Description {

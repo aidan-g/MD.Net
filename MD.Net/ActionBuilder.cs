@@ -45,7 +45,7 @@ namespace MD.Net
                     this.RemoveTrack(actions, device, currentTrack);
                 }
             }
-            return new Actions(actions);
+            return new Actions(device, currentDisc, updatedDisc, actions);
         }
 
         protected virtual void AddTrack(IList<IAction> actions, IDevice device, ITrack track)

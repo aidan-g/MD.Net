@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MD.Net.Resources;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TinyJson;
@@ -58,9 +59,16 @@ namespace MD.Net
             ));
         }
 
-        public IResult ApplyActions(IDevice device, IActions actions, IStatus status)
+        public IResult ApplyActions(IDevice device, IActions actions, IStatus status, bool validate)
         {
             var message = default(string);
+            if (validate)
+            {
+                if (!this.ValidateActions(device, actions, out message))
+                {
+                    return Result.Failure(message);
+                }
+            }
             var position = 0;
             var count = actions.Count;
             foreach (var action in actions)
@@ -85,6 +93,18 @@ namespace MD.Net
                 return Result.Failure(message);
             }
             return Result.Success;
+        }
+
+        protected virtual bool ValidateActions(IDevice device, IActions actions, out string message)
+        {
+            var disc = this.GetDisc(device);
+            if (!disc.Equals(actions.CurrentDisc))
+            {
+                message = Strings.Error_DiscWasModified;
+                return false;
+            }
+            message = string.Empty;
+            return true;
         }
 
         private struct _Disc

@@ -2,7 +2,7 @@
 
 namespace MD.Net
 {
-    public interface ITrack
+    public interface ITrack : IEquatable<ITrack>
     {
         string Id { get; }
 
