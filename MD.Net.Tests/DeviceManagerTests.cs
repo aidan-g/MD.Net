@@ -33,5 +33,15 @@ namespace MD.Net.Tests
             Assert.IsNotNull(device);
             Assert.AreEqual("Sony MDS-JE780/JB980", device.Name);
         }
+
+        [Test]
+        public void Erase()
+        {
+            var toolManager = MockRepository.GenerateStub<IToolManager>();
+            toolManager.Expect(tm => tm.Start(Tools.NETMDCLI, Constants.NETMDCLI_ERASE)).Return(null);
+            toolManager.Expect(tm => tm.Exec(Arg<Process>.Is.Anything, out Arg<string>.Out(Resources.Sony_MDS_JE780___No_Disk).Dummy, out Arg<string>.Out(string.Empty).Dummy)).Return(0);
+            var deviceManager = new DeviceManager(toolManager);
+            deviceManager.Erase(Device.None);
+        }
     }
 }

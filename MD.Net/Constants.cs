@@ -18,6 +18,9 @@
 
         public const string NETMDCLI_DELETE = "delete";
 
+        //This does not appear to work.
+        public const string NETMDCLI_ERASE = "erase force";
+
         public const string LIBNETMD_UNPROT = "unprot";
 
         public const string LIBNETMD_SP = "SP";

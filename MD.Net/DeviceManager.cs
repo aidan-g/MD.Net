@@ -36,6 +36,15 @@ namespace MD.Net
             };
         }
 
+        public IResult Erase(IDevice device)
+        {
+            var output = default(string);
+            var error = default(string);
+            var process = this.ToolManager.Start(Tools.NETMDCLI, Constants.NETMDCLI_ERASE);
+            var code = this.ToolManager.Exec(process, out output, out error);
+            return Result.Success;
+        }
+
         private struct _Device
         {
             public string device;
