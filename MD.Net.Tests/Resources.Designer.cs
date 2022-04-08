@@ -108,5 +108,15 @@ namespace MD.Net.Tests {
                 return ResourceManager.GetString("Sony_MDS_JE780___No_Disk", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current track: You
+        ///Current playback position: 00:00:40.55.
+        /// </summary>
+        internal static string Status_You {
+            get {
+                return ResourceManager.GetString("Status_You", resourceCulture);
+            }
+        }
     }
 }

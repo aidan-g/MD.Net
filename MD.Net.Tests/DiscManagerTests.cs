@@ -37,9 +37,9 @@ namespace MD.Net.Tests
             var disc = discManager.GetDisc(device);
             Assert.IsNotNull(disc);
             Assert.AreEqual("Evanescence", disc.Title);
-            Assert.AreEqual(new TimeSpan(0, 47, 20), disc.RecordedTime);
-            Assert.AreEqual(new TimeSpan(1, 14, 59), disc.TotalTime);
-            Assert.AreEqual(new TimeSpan(0, 27, 26), disc.AvailableTime);
+            Assert.AreEqual(new TimeSpan(0, 0, 47, 20, 104), disc.RecordedTime);
+            Assert.AreEqual(new TimeSpan(0, 1, 14, 59, 487), disc.TotalTime);
+            Assert.AreEqual(new TimeSpan(0, 0, 27, 26, 951), disc.AvailableTime);
             Assert.AreEqual(12, disc.Tracks.Count);
         }
 

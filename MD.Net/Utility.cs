@@ -4,6 +4,9 @@ namespace MD.Net
 {
     public static class Utility
     {
+        //Source: https://www.minidisc.org/minidisc_faq.html
+        const float MS_PER_FRAME = 11.6f;
+
         public static TimeSpan GetTimeSpan(string value)
         {
             if (string.IsNullOrEmpty(value))
@@ -39,8 +42,7 @@ namespace MD.Net
                 return TimeSpan.Zero;
             }
 
-            //TODO: Frames are ignored, not sure how to convert to ms.
-            return new TimeSpan(hours, minutes, seconds);
+            return new TimeSpan(0, hours, minutes, seconds, FramesToMS(frames));
         }
 
         public static Protection GetProtection(string protect)
@@ -67,6 +69,16 @@ namespace MD.Net
                 return Compression.LP4;
             }
             return Compression.Unknown;
+        }
+
+        public static int MSToFrames(int ms)
+        {
+            return Convert.ToInt32((float)ms / MS_PER_FRAME);
+        }
+
+        public static int FramesToMS(int frames)
+        {
+            return Convert.ToInt32((float)frames * MS_PER_FRAME);
         }
     }
 }

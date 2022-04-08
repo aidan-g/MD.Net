@@ -8,15 +8,29 @@
 
         public const string NETMDCLI_PLAY = "play";
 
+        public const string NETMDCLI_PAUSE = "pause";
+
+        public const string NETMDCLI_NEXT = "next";
+
+        public const string NETMDCLI_PREVIOUS = "previous";
+
         public const string NETMDCLI_STOP = "stop";
 
         public const string NETMDCLI_SETTITLE = "settitle";
+
+        public const string NETMDCLI_SETTIME = "settime";
 
         public const string NETMDCLI_RENAME = "rename";
 
         public const string NETMDCLI_SEND = "send";
 
         public const string NETMDCLI_DELETE = "delete";
+
+        public const string NETMDCLI_STATUS = "status";
+
+        public const string NETMDCLI_CURRENT_TRACK = "Current track: ";
+
+        public const string NETMDCLI_CURRENT_POSITION = "Current playback position: ";
 
         //This does not appear to work.
         public const string NETMDCLI_ERASE = "erase force";
