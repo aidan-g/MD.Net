@@ -15,34 +15,58 @@ namespace MD.Net
             }
 
             var parts = value.Split(new[] { ':', '.' }, 4);
-            if (parts.Length != 4)
+            if (parts.Length == 3)
             {
-                return TimeSpan.Zero;
-            }
+                var minutes = default(int);
+                var seconds = default(int);
+                var frames = default(int);
 
-            var hours = default(int);
-            var minutes = default(int);
-            var seconds = default(int);
-            var frames = default(int);
+                if (!int.TryParse(parts[0], out minutes))
+                {
+                    return TimeSpan.Zero;
+                }
+                if (!int.TryParse(parts[1], out seconds))
+                {
+                    return TimeSpan.Zero;
+                }
+                if (!int.TryParse(parts[2], out frames))
+                {
+                    return TimeSpan.Zero;
+                }
 
-            if (!int.TryParse(parts[0], out hours))
-            {
-                return TimeSpan.Zero;
+                return new TimeSpan(0, 0, minutes, seconds, FramesToMS(frames));
             }
-            if (!int.TryParse(parts[1], out minutes))
+            else if (parts.Length == 4)
             {
-                return TimeSpan.Zero;
-            }
-            if (!int.TryParse(parts[2], out seconds))
-            {
-                return TimeSpan.Zero;
-            }
-            if (!int.TryParse(parts[3], out frames))
-            {
-                return TimeSpan.Zero;
-            }
 
-            return new TimeSpan(0, hours, minutes, seconds, FramesToMS(frames));
+                var hours = default(int);
+                var minutes = default(int);
+                var seconds = default(int);
+                var frames = default(int);
+
+                if (!int.TryParse(parts[0], out hours))
+                {
+                    return TimeSpan.Zero;
+                }
+                if (!int.TryParse(parts[1], out minutes))
+                {
+                    return TimeSpan.Zero;
+                }
+                if (!int.TryParse(parts[2], out seconds))
+                {
+                    return TimeSpan.Zero;
+                }
+                if (!int.TryParse(parts[3], out frames))
+                {
+                    return TimeSpan.Zero;
+                }
+
+                return new TimeSpan(0, hours, minutes, seconds, FramesToMS(frames));
+            }
+            else
+            {
+                return TimeSpan.Zero;
+            }
         }
 
         public static Protection GetProtection(string protect)

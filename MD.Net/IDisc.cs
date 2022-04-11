@@ -15,5 +15,7 @@ namespace MD.Net
         TimeSpan TotalTime { get; }
 
         ITracks Tracks { get; }
+
+        IDisc Clone();
     }
 }

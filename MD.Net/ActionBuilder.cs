@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MD.Net
 {
@@ -12,7 +13,15 @@ namespace MD.Net
             {
                 actions.Add(new UpdateDiscTitleAction(device, currentDisc, updatedDisc));
             }
-            foreach (var updatedTrack in updatedDisc.Tracks)
+            this.UpdateTracks(actions, device, currentDisc, updatedDisc);
+            this.RemoveTracks(actions, device, currentDisc, updatedDisc);
+            this.AddTracks(actions, device, currentDisc, updatedDisc);
+            return new Actions(device, currentDisc, updatedDisc, actions);
+        }
+
+        protected virtual void AddTracks(IList<IAction> actions, IDevice device, IDisc currentDisc, IDisc updatedDisc)
+        {
+            foreach (var updatedTrack in updatedDisc.Tracks.OrderBy(track => track.Position))
             {
                 var found = default(bool);
                 foreach (var currentTrack in currentDisc.Tracks)
@@ -22,13 +31,47 @@ namespace MD.Net
                         continue;
                     }
                     found = true;
+                    break;
                 }
                 if (!found)
                 {
                     this.AddTrack(actions, device, updatedTrack);
                 }
             }
-            foreach (var currentTrack in currentDisc.Tracks)
+        }
+
+        protected virtual void AddTrack(IList<IAction> actions, IDevice device, ITrack track)
+        {
+            actions.Add(new AddTrackAction(device, track));
+        }
+
+        protected virtual void UpdateTracks(IList<IAction> actions, IDevice device, IDisc currentDisc, IDisc updatedDisc)
+        {
+            foreach (var currentTrack in currentDisc.Tracks.OrderBy(track => track.Position))
+            {
+                foreach (var updatedTrack in updatedDisc.Tracks)
+                {
+                    if (currentTrack.Id != updatedTrack.Id)
+                    {
+                        continue;
+                    }
+                    this.UpdateTrack(actions, device, currentTrack, updatedTrack);
+                    break;
+                }
+            }
+        }
+
+        protected virtual void UpdateTrack(IList<IAction> actions, IDevice device, ITrack currentTrack, ITrack updatedTrack)
+        {
+            if (!string.Equals(currentTrack.Name, updatedTrack.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                actions.Add(new UpdateTrackNameAction(device, currentTrack, updatedTrack));
+            }
+        }
+
+        protected virtual void RemoveTracks(IList<IAction> actions, IDevice device, IDisc currentDisc, IDisc updatedDisc)
+        {
+            foreach (var currentTrack in currentDisc.Tracks.OrderByDescending(track => track.Position))
             {
                 var found = default(bool);
                 foreach (var updatedTrack in updatedDisc.Tracks)
@@ -37,27 +80,13 @@ namespace MD.Net
                     {
                         continue;
                     }
-                    this.UpdateTrack(actions, device, currentTrack, updatedTrack);
                     found = true;
+                    break;
                 }
                 if (!found)
                 {
                     this.RemoveTrack(actions, device, currentTrack);
                 }
-            }
-            return new Actions(device, currentDisc, updatedDisc, actions);
-        }
-
-        protected virtual void AddTrack(IList<IAction> actions, IDevice device, ITrack track)
-        {
-            actions.Add(new AddTrackAction(device, track));
-        }
-
-        protected virtual void UpdateTrack(IList<IAction> actions, IDevice device, ITrack currentTrack, ITrack updatedTrack)
-        {
-            if (!string.Equals(currentTrack.Name, updatedTrack.Name, StringComparison.OrdinalIgnoreCase))
-            {
-                actions.Add(new UpdateTrackNameAction(device, currentTrack, updatedTrack));
             }
         }
 

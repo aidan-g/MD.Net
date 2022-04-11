@@ -127,4 +127,13 @@
   <data name="Status_You" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\status_you.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="Track_001" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Track 001.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Track_002" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Track 002.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Track_003" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Track 003.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

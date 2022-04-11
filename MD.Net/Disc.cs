@@ -36,6 +36,11 @@ namespace MD.Net
 
         public ITracks Tracks { get; }
 
+        public IDisc Clone()
+        {
+            return new Disc(this);
+        }
+
         public override bool Equals(object obj)
         {
             return this.Equals(obj as IDisc);

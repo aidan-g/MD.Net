@@ -21,7 +21,7 @@ namespace MD.Net
         {
             var output = default(string);
             var error = default(string);
-            var process = toolManager.Start(Tools.NETMDCLI, string.Format("{0} {1}", Constants.NETMDCLI_SETTITLE, this.UpdatedDisc.Title));
+            var process = toolManager.Start(Tools.NETMDCLI, string.Format("{0} \"{1}\"", Constants.NETMDCLI_SETTITLE, this.UpdatedDisc.Title));
             var code = toolManager.Exec(process, out output, out error);
         }
     }

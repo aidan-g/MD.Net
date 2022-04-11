@@ -10,7 +10,7 @@ namespace MD.Net
 
         Protection Protection { get; }
 
-        Compression Compression { get; }
+        Compression Compression { get; set; }
 
         TimeSpan Time { get; }
 

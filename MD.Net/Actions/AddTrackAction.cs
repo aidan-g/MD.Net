@@ -22,7 +22,7 @@ namespace MD.Net
         {
             var output = default(string);
             var error = default(string);
-            var process = toolManager.Start(Tools.NETMDCLI, string.Format("{0} {1} {2}", Constants.NETMDCLI_SEND, this.UpdatedTrack.Location, this.UpdatedTrack.Name));
+            var process = toolManager.Start(Tools.NETMDCLI, string.Format("{0} \"{1}\" \"{2}\"", Constants.NETMDCLI_SEND, this.UpdatedTrack.Location, this.UpdatedTrack.Name));
             var code = toolManager.Exec(process, out output, out error);
         }
     }

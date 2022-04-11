@@ -13,6 +13,8 @@ namespace MD.Net
 
         void Remove(ITrack track);
 
+        void Clear();
+
         ITracks Clone();
     }
 }

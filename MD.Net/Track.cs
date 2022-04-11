@@ -30,7 +30,7 @@ namespace MD.Net
 
         public Protection Protection { get; private set; }
 
-        public Compression Compression { get; private set; }
+        public Compression Compression { get; set; }
 
         public TimeSpan Time { get; }
 
@@ -101,7 +101,18 @@ namespace MD.Net
             unchecked
             {
                 id += track.Position.GetHashCode();
-                id += track.Name.GetHashCode();
+                if (!string.IsNullOrEmpty(track.Name))
+                {
+                    id += track.Name.GetHashCode();
+                }
+                if (track.Time != TimeSpan.Zero)
+                {
+                    id += track.Time.GetHashCode();
+                }
+                if (!string.IsNullOrEmpty(track.Location))
+                {
+                    id += track.Location.GetHashCode();
+                }
             }
             return Math.Abs(id).ToString();
         }

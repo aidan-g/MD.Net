@@ -118,5 +118,32 @@ namespace MD.Net.Tests {
                 return ResourceManager.GetString("Status_You", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream Track_001 {
+            get {
+                return ResourceManager.GetStream("Track_001", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream Track_002 {
+            get {
+                return ResourceManager.GetStream("Track_002", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream Track_003 {
+            get {
+                return ResourceManager.GetStream("Track_003", resourceCulture);
+            }
+        }
     }
 }

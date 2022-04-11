@@ -47,7 +47,7 @@ namespace MD.Net.Tests
         public void UpdateDiscTitle(string currentTitle, string updatedTitle)
         {
             var toolManager = MockRepository.GenerateStrictMock<IToolManager>();
-            toolManager.Expect(tm => tm.Start(Tools.NETMDCLI, string.Format("{0} {1}", Constants.NETMDCLI_SETTITLE, updatedTitle))).Return(null);
+            toolManager.Expect(tm => tm.Start(Tools.NETMDCLI, string.Format("{0} \"{1}\"", Constants.NETMDCLI_SETTITLE, updatedTitle))).Return(null);
             toolManager.Expect(tm => tm.Exec(Arg<Process>.Is.Anything, out Arg<string>.Out(string.Empty).Dummy, out Arg<string>.Out(string.Empty).Dummy)).Return(0);
             var device = new Device("Sony MDS-JE780/JB980");
             var currentDisc = new Disc(currentTitle, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, Tracks.None);
@@ -100,7 +100,7 @@ namespace MD.Net.Tests
         public void AddTrack(string location, string name)
         {
             var toolManager = MockRepository.GenerateStrictMock<IToolManager>();
-            toolManager.Expect(tm => tm.Start(Tools.NETMDCLI, string.Format("{0} {1} {2}", Constants.NETMDCLI_SEND, location, name))).Return(null);
+            toolManager.Expect(tm => tm.Start(Tools.NETMDCLI, string.Format("{0} \"{1}\" \"{2}\"", Constants.NETMDCLI_SEND, location, name))).Return(null);
             toolManager.Expect(tm => tm.Exec(Arg<Process>.Is.Anything, out Arg<string>.Out(string.Empty).Dummy, out Arg<string>.Out(string.Empty).Dummy)).Return(0);
             var device = new Device("Sony MDS-JE780/JB980");
             var track1 = new Track(0, Protection.None, Compression.None, TimeSpan.Zero, string.Empty);

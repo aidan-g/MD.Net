@@ -57,6 +57,11 @@ namespace MD.Net
             this.Store.Remove(track);
         }
 
+        public void Clear()
+        {
+            this.Store.Clear();
+        }
+
         public ITracks Clone()
         {
             return new Tracks(this.Store.Select(track => track.Clone()));
