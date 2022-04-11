@@ -42,5 +42,17 @@
         public const string LIBNETMD_LP2 = "LP2";
 
         public const string LIBNETMD_LP4 = "LP4";
+
+        public const string ATRACDENC_ENCODE = "--encode";
+
+        public const string ATRACDENC_ATRAC1 = "atrac1";
+
+        public const string ATRACDENC_ATRAC3 = "atrac3";
+
+        public const string ATRACDENC_INPUT = "-i";
+
+        public const string ATRACDENC_OUTPUT = "-o";
+
+        public const string ATRACDENC_BITRATE = "--bitrate";
     }
 }
