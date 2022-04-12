@@ -123,6 +123,9 @@
   <data name="Error.DiscWasModified" xml:space="preserve">
     <value>The source disc was modified, cannot update.</value>
   </data>
+  <data name="FormatManager.Description" xml:space="preserve">
+    <value>Encoding track: {0}</value>
+  </data>
   <data name="RemoveTrackAction.Description" xml:space="preserve">
     <value>Deleting track: {0}</value>
   </data>

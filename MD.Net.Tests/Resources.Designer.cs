@@ -61,6 +61,19 @@ namespace MD.Net.Tests {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Input file: ..\..\..\Media\Track 001.wav
+        /// Channels: 2
+        /// SampleRate: 44100
+        /// TotalSamples: 007BFAA8
+        ///\  0% done        ///|  0% done        ////  0% done        ///-  0% done        ///\  0% done        ///|  0% done        ////  0% done        ///-  0% done        ///\  0% done        ///|  0% done        ////  0% done        ///-  0% done        ///\  0% done        ///|  0% done        ////  0% done        ///-  0% done        ///\  0% done        ///|  0% done        ////  0% done        ///-  0% done        ///\  0% done        ///|  0% done        ////  0% done        ///-  0% done        ///\  0% done        ///|  0% done        ////  0% done        ///-  0% done        ///\  0% done        ///|  0% done        ////  0% done        ///-  0% done        ///\  1% done        ///|  1% done        ////  1% done        ///-  1% done        ///\  1% done        ///|  1 [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Convert_Atrac {
+            get {
+                return ResourceManager.GetString("Convert_Atrac", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;device&quot;:&quot;Sony MDS-JE780\/JB980&quot;,
         ///  &quot;title&quot;:&quot;Evanescence&quot;,

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace MD.Net
 {
@@ -23,15 +24,19 @@ namespace MD.Net
             {
                 return false;
             }
-            foreach (var line in output.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+            using (var reader = new StringReader(output))
             {
-                if (line.StartsWith(Constants.NETMDCLI_CURRENT_TRACK, StringComparison.OrdinalIgnoreCase))
+                var line = default(string);
+                while ((line = reader.ReadLine()) != null)
                 {
-                    name = line.Substring(Constants.NETMDCLI_CURRENT_TRACK.Length);
-                }
-                else if (line.StartsWith(Constants.NETMDCLI_CURRENT_POSITION, StringComparison.OrdinalIgnoreCase))
-                {
-                    position = Utility.GetTimeSpan(line.Substring(Constants.NETMDCLI_CURRENT_POSITION.Length));
+                    if (line.StartsWith(Constants.NETMDCLI_CURRENT_TRACK, StringComparison.OrdinalIgnoreCase))
+                    {
+                        name = line.Substring(Constants.NETMDCLI_CURRENT_TRACK.Length);
+                    }
+                    else if (line.StartsWith(Constants.NETMDCLI_CURRENT_POSITION, StringComparison.OrdinalIgnoreCase))
+                    {
+                        position = Utility.GetTimeSpan(line.Substring(Constants.NETMDCLI_CURRENT_POSITION.Length));
+                    }
                 }
             }
             return !string.IsNullOrEmpty(name) && position != TimeSpan.Zero;

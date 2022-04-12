@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Text;
 
 namespace MD.Net
 {
@@ -19,21 +18,22 @@ namespace MD.Net
 
         public int Exec(Process process, out string output, out string error)
         {
-            var _output = new StringBuilder();
-            var _error = new StringBuilder();
+            return this.Exec(process, Collector<string>.Collect(StringAggregator.NewLine, out output), Collector<string>.Collect(StringAggregator.NewLine, out error));
+        }
+
+        public int Exec(Process process, Action<string> outputHandler, Action<string> errorHandler)
+        {
             process.OutputDataReceived += (sender, e) =>
             {
-                _output.AppendLine(e.Data);
+                outputHandler(e.Data);
             };
             process.ErrorDataReceived += (sender, e) =>
             {
-                _error.AppendLine(e.Data);
+                errorHandler(e.Data);
             };
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
             process.WaitForExit();
-            output = _output.ToString();
-            error = _error.ToString();
             return process.ExitCode;
         }
 

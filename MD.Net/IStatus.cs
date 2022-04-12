@@ -34,6 +34,7 @@ namespace MD.Net
     {
         None,
         Action,
-        Transfer
+        Transfer,
+        Encode
     }
 }

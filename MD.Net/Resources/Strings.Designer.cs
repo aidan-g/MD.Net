@@ -79,6 +79,15 @@ namespace MD.Net.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Encoding track: {0}.
+        /// </summary>
+        internal static string FormatManager_Description {
+            get {
+                return ResourceManager.GetString("FormatManager.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Deleting track: {0}.
         /// </summary>
         internal static string RemoveTrackAction_Description {
