@@ -8,10 +8,25 @@ namespace MD.Net.Tests
     public class OMAHeaderTests
     {
         [Test]
-        public void Read_ATRAC3()
+        public void Read_ATRAC3_LP2()
         {
             var info = default(OMAHeader.OMAInfo);
-            using (var reader = new MemoryStream(Resources.OMA_ATRAC3))
+            using (var reader = new MemoryStream(Resources.OMA_ATRAC_LP2))
+            {
+                var result = OMAHeader.Read(reader, out info);
+                Assert.IsTrue(result);
+                Assert.AreEqual(OMAHeader.OMA_CODEC_ATRAC3, info.Codec);
+                Assert.AreEqual(384, info.Framesize);
+                Assert.AreEqual(44100, info.SampleRate);
+                Assert.AreEqual(OMAHeader.OMA_STEREO, info.ChannelFormat);
+            }
+        }
+
+        [Test]
+        public void Read_ATRAC3_LP4()
+        {
+            var info = default(OMAHeader.OMAInfo);
+            using (var reader = new MemoryStream(Resources.OMA_ATRAC_LP4))
             {
                 var result = OMAHeader.Read(reader, out info);
                 Assert.IsTrue(result);
@@ -24,7 +39,7 @@ namespace MD.Net.Tests
 
         [Test]
         [Explicit("Not yet implemented.")]
-        public void Write_ATRAC3()
+        public void Write_ATRAC3_LP2()
         {
             var info = default(OMAHeader.OMAInfo);
             info.Codec = OMAHeader.OMA_CODEC_ATRAC3;
@@ -35,7 +50,26 @@ namespace MD.Net.Tests
             {
                 var result = OMAHeader.Write(writer, info);
                 Assert.IsTrue(result);
-                var expected = Resources.OMA_ATRAC3;
+                var expected = Resources.OMA_ATRAC_LP2;
+                var actual = writer.ToArray();
+                Assert.IsTrue(Enumerable.SequenceEqual(expected, actual));
+            }
+        }
+
+        [Test]
+        [Explicit("Not yet implemented.")]
+        public void Write_ATRAC3_LP4()
+        {
+            var info = default(OMAHeader.OMAInfo);
+            info.Codec = OMAHeader.OMA_CODEC_ATRAC3;
+            info.Framesize = 192;
+            info.SampleRate = 44100;
+            info.ChannelFormat = OMAHeader.OMA_JOINT_STEREO;
+            using (var writer = new MemoryStream())
+            {
+                var result = OMAHeader.Write(writer, info);
+                Assert.IsTrue(result);
+                var expected = Resources.OMA_ATRAC_LP4;
                 var actual = writer.ToArray();
                 Assert.IsTrue(Enumerable.SequenceEqual(expected, actual));
             }

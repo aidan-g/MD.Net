@@ -135,5 +135,21 @@ namespace MD.Net
             }
             return buffer;
         }
+
+        public static bool BufferEquals(byte[] subject, byte[] value, int index)
+        {
+            for (var a = index; a < value.Length; a++)
+            {
+                if (subject.Length < a)
+                {
+                    return false;
+                }
+                if (subject[a] != value[a])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

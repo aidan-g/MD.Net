@@ -56,12 +56,20 @@ namespace MD.Net
             var result = Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName) + ".wav");
             using (var reader = File.OpenRead(fileName))
             {
-                var info = default(OMAHeader.OMAInfo);
-                if (OMAHeader.Read(reader, out info))
+                var omaInfo = default(OMAHeader.OMAInfo);
+                if (OMAHeader.Read(reader, out omaInfo))
                 {
+                    var wavInfo = default(WavHeader.WavInfo);
+                    wavInfo.FileSize = global::System.Convert.ToInt32(new FileInfo(fileName).Length);
+                    wavInfo.Format = WavHeader.WAV_FORMAT_ATRAC3;
+                    wavInfo.ChannelCount = 2;
+                    wavInfo.SampleRate = omaInfo.SampleRate;
+                    wavInfo.ByteRate = 8268;
+                    wavInfo.BlockAlign = omaInfo.Framesize;
+                    wavInfo.BitsPerSample = 0;
                     using (var writer = File.Create(result))
                     {
-                        //WavHeader.Write(writer);
+                        WavHeader.Write(writer, wavInfo);
                         reader.CopyTo(writer);
                     }
                 }

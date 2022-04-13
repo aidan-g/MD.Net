@@ -76,9 +76,19 @@ namespace MD.Net.Tests {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] OMA_ATRAC3 {
+        internal static byte[] OMA_ATRAC_LP2 {
             get {
-                object obj = ResourceManager.GetObject("OMA_ATRAC3", resourceCulture);
+                object obj = ResourceManager.GetObject("OMA_ATRAC_LP2", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] OMA_ATRAC_LP4 {
+            get {
+                object obj = ResourceManager.GetObject("OMA_ATRAC_LP4", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -172,9 +182,19 @@ namespace MD.Net.Tests {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] WAV_ATRAC3 {
+        internal static byte[] WAV_ATRAC3_LP2 {
             get {
-                object obj = ResourceManager.GetObject("WAV_ATRAC3", resourceCulture);
+                object obj = ResourceManager.GetObject("WAV_ATRAC3_LP2", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] WAV_ATRAC3_LP4 {
+            get {
+                object obj = ResourceManager.GetObject("WAV_ATRAC3_LP4", resourceCulture);
                 return ((byte[])(obj));
             }
         }

@@ -1,76 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Linq;
+using System.Text;
 
 namespace MD.Net
 {
     public static class WavHeader
     {
-        public const int WAV_HEADER_SIZE = 20;
+        public static readonly byte[] WAV_TAG_RIFF = Encoding.ASCII.GetBytes("RIFF");
 
-        public const int WAV_TAG_ATRAC3 = 0x270;
+        public static readonly byte[] WAV_TAG_WAVE = Encoding.ASCII.GetBytes("WAVE");
+
+        public static readonly string WAV_CHUNK_FMT = "fmt ";
+
+        public static readonly string WAV_CHUNK_DATA = "data";
+
+        public const int WAV_FORMAT_PCM = 0x1;
+
+        public const int WAV_FORMAT_ATRAC3 = 0x270;
 
         public static bool Read(Stream stream, out WavInfo info)
         {
-            var buffer = new byte[WAV_HEADER_SIZE];
+            var buffer = new byte[12];
             if (stream.Read(buffer, 0, buffer.Length) != buffer.Length)
             {
                 //No header?
                 info = default(WavInfo);
                 return false;
             }
-            if (buffer[0] != 'R' || buffer[1] != 'I' || buffer[2] != 'F' || buffer[3] != 'F')
+            if (!Utility.BufferEquals(buffer, WAV_TAG_RIFF, 0))
             {
                 //Not RIFF?
                 info = default(WavInfo);
                 return false;
             }
-            var fileSize = Utility.LEWord32(buffer, 4);
-            if (buffer[8] != 'W' || buffer[9] != 'A' || buffer[10] != 'V' || buffer[11] != 'E')
+            if (!Utility.BufferEquals(buffer, WAV_TAG_WAVE, 8))
             {
                 //Not WAVE?
                 info = default(WavInfo);
                 return false;
             }
-            if (buffer[12] != 'f' || buffer[13] != 'm' || buffer[14] != 't' || buffer[15] != ' ')
+            info = new WavInfo()
             {
-                //Not WAVE?
-                info = default(WavInfo);
-                return false;
-            }
-            var formatChunkSize = Utility.LEWord32(buffer, 16);
-            if (!ReadChunk(stream, formatChunkSize, out buffer))
-            {
-                //EOF?
-                info = default(WavInfo);
-                return false;
-            }
-            var format = Utility.LEWord16(buffer, 0);
-            var channelCount = Utility.LEWord16(buffer, 2);
-            var sampleRate = Utility.LEWord32(buffer, 4);
-            var byteRate = Utility.LEWord32(buffer, 8);
-            var blockAlign = Utility.LEWord16(buffer, 12);
-            var bitsPerSample = Utility.LEWord16(buffer, 14);
-            info.FileSize = fileSize;
-            info.Format = format;
-            info.ChannelCount = channelCount;
-            info.SampleRate = sampleRate;
-            info.ByteRate = byteRate;
-            info.BlockAlign = blockAlign;
-            info.BitsPerSample = bitsPerSample;
-            //This is later populated by the data chunk size.
-            info.DataSize = 0;
-            //If we have additional data, store it.
-            if (formatChunkSize > 16)
-            {
-                info.Data = buffer.Skip(16).Take(formatChunkSize - 16).ToArray();
-            }
-            else
-            {
-                info.Data = null;
-            }
+                FileSize = Utility.LEWord32(buffer, 4)
+            };
             var chunks = new List<WaveChunk>();
             do
             {
@@ -81,25 +55,50 @@ namespace MD.Net
                     info = default(WavInfo);
                     return false;
                 }
+                var name = Encoding.Default.GetString(buffer, 0, 4);
                 var chunkSize = Utility.LEWord32(buffer, 4);
-                if (buffer[0] != 'd' || buffer[1] != 'a' || buffer[2] != 't' || buffer[3] != 'a')
+                if (string.Equals(name, WAV_CHUNK_FMT, StringComparison.OrdinalIgnoreCase))
                 {
-                    var name = Encoding.Default.GetString(buffer, 0, 4);
                     if (!ReadChunk(stream, chunkSize, out buffer))
                     {
                         //EOF?
-                        break;
+                        info = default(WavInfo);
+                        return false;
+                    }
+                    info.Format = Utility.LEWord16(buffer, 0);
+                    info.ChannelCount = Utility.LEWord16(buffer, 2);
+                    info.SampleRate = Utility.LEWord32(buffer, 4);
+                    info.ByteRate = Utility.LEWord32(buffer, 8);
+                    info.BlockAlign = Utility.LEWord16(buffer, 12);
+                    info.BitsPerSample = Utility.LEWord16(buffer, 14);
+                    //If we have additional data, store it.
+                    if (chunkSize > 16)
+                    {
+                        info.Data = buffer.Skip(16).Take(chunkSize - 16).ToArray();
+                    }
+                    else
+                    {
+                        info.Data = null;
+                    }
+                }
+                else if (string.Equals(name, WAV_CHUNK_DATA, StringComparison.OrdinalIgnoreCase))
+                {
+                    info.DataSize = chunkSize;
+                    break;
+                }
+                else
+                {
+                    if (!ReadChunk(stream, chunkSize, out buffer))
+                    {
+                        //EOF?
+                        info = default(WavInfo);
+                        return false;
                     }
                     chunks.Add(new WaveChunk()
                     {
                         Name = name,
                         Data = buffer
                     });
-                }
-                else
-                {
-                    info.DataSize = chunkSize;
-                    break;
                 }
             } while (true);
             info.Chunks = chunks.ToArray();
@@ -121,19 +120,10 @@ namespace MD.Net
         public static bool Write(Stream stream, WavInfo info)
         {
             var writer = new BinaryWriter(stream);
-            writer.Write('R');
-            writer.Write('I');
-            writer.Write('F');
-            writer.Write('F');
+            writer.Write(WAV_TAG_RIFF);
             writer.Write(Utility.LEWord32(info.FileSize));
-            writer.Write('W');
-            writer.Write('A');
-            writer.Write('V');
-            writer.Write('E');
-            writer.Write('f');
-            writer.Write('m');
-            writer.Write('t');
-            writer.Write(' ');
+            writer.Write(WAV_TAG_WAVE);
+            writer.Write(Encoding.ASCII.GetBytes(WAV_CHUNK_FMT));
             if (info.Data != null)
             {
                 writer.Write(Utility.LEWord32(16 + info.Data.Length));
@@ -157,16 +147,45 @@ namespace MD.Net
                 foreach (var chunk in info.Chunks)
                 {
                     writer.Write(Encoding.ASCII.GetBytes(chunk.Name.ToCharArray(), 0, 4));
-                    writer.Write(Utility.LEWord32(chunk.Data.Length));
-                    writer.Write(chunk.Data);
+                    if (chunk.Data != null)
+                    {
+                        writer.Write(Utility.LEWord32(chunk.Data.Length));
+                        writer.Write(chunk.Data);
+                    }
+                    else
+                    {
+                        writer.Write(Utility.LEWord32(0));
+                    }
                 }
             }
-            writer.Write('d');
-            writer.Write('a');
-            writer.Write('t');
-            writer.Write('a');
+            writer.Write(Encoding.ASCII.GetBytes(WAV_CHUNK_DATA));
+            if (info.DataSize == 0)
+            {
+                info.DataSize = GetDataSize(info);
+            }
             writer.Write(Utility.LEWord32(info.DataSize));
             return true;
+        }
+
+        public static int GetDataSize(WavInfo info)
+        {
+            var headerSize = 44;
+            if (info.Data != null)
+            {
+                headerSize += info.Data.Length;
+            }
+            if (info.Chunks != null)
+            {
+                foreach (var chunk in info.Chunks)
+                {
+                    headerSize += 4;
+                    if (chunk.Data != null)
+                    {
+                        headerSize += chunk.Data.Length;
+                    }
+                }
+            }
+            return info.FileSize - headerSize;
         }
 
         public struct WavInfo
