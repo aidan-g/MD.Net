@@ -18,6 +18,13 @@ namespace MD.Net
             }
         }
 
+        public override void Prepare(IToolManager toolManager, IStatus status)
+        {
+            var formatManager = new FormatManager(toolManager);
+            this.UpdatedTrack.Location = formatManager.Convert(this.UpdatedTrack.Location, this.UpdatedTrack.Compression, status);
+            base.Prepare(toolManager, status);
+        }
+
         public override void Apply(IToolManager toolManager, IStatus status)
         {
             var output = default(string);

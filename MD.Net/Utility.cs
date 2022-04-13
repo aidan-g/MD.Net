@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace MD.Net
 {
@@ -103,6 +104,36 @@ namespace MD.Net
         public static int FramesToMS(int frames)
         {
             return Convert.ToInt32((float)frames * MS_PER_FRAME);
+        }
+
+        public static int LEWord32(byte[] buffer, int index)
+        {
+            return (buffer[index + 3] << 24) + (buffer[index + 2] << 16) + (buffer[index + 1] << 8) + buffer[index + 0];
+        }
+
+        public static int LEWord16(byte[] buffer, int index)
+        {
+            return buffer[index + 1] * 256 + buffer[index + 0];
+        }
+
+        public static byte[] LEWord32(int value)
+        {
+            var buffer = BitConverter.GetBytes(value);
+            if (!BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(buffer);
+            }
+            return buffer;
+        }
+
+        public static byte[] LEWord16(int value)
+        {
+            var buffer = BitConverter.GetBytes(Convert.ToInt16(value));
+            if (!BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(buffer);
+            }
+            return buffer;
         }
     }
 }

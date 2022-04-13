@@ -121,6 +121,9 @@
   <data name="Convert_Atrac" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\convert_atrac.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="OMA_ATRAC3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\oma_atrac3.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="Sony_MDS_JE780___Evanescence" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\sony mds-je780 - evanescence.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
@@ -138,5 +141,8 @@
   </data>
   <data name="Track_003" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Track 003.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="WAV_ATRAC3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\wav_atrac3.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

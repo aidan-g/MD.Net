@@ -74,6 +74,16 @@ namespace MD.Net.Tests {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] OMA_ATRAC3 {
+            get {
+                object obj = ResourceManager.GetObject("OMA_ATRAC3", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;device&quot;:&quot;Sony MDS-JE780\/JB980&quot;,
         ///  &quot;title&quot;:&quot;Evanescence&quot;,
@@ -156,6 +166,16 @@ namespace MD.Net.Tests {
         internal static System.IO.UnmanagedMemoryStream Track_003 {
             get {
                 return ResourceManager.GetStream("Track_003", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] WAV_ATRAC3 {
+            get {
+                object obj = ResourceManager.GetObject("WAV_ATRAC3", resourceCulture);
+                return ((byte[])(obj));
             }
         }
     }

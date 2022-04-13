@@ -43,7 +43,7 @@
 
         public const string LIBNETMD_LP4 = "LP4";
 
-        public const string ATRACDENC_ENCODE = "--encode";
+        public const string ATRACDENC_ENCODE = "-e";
 
         public const string ATRACDENC_ATRAC1 = "atrac1";
 
