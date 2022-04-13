@@ -21,6 +21,10 @@ namespace MD.Net
 
         public override void Append(string value)
         {
+            if (string.IsNullOrEmpty(value))
+            {
+                return;
+            }
             if (this.Builder.Length > 0)
             {
                 this.Builder.Append(this.Delimiter);

@@ -27,7 +27,25 @@ namespace MD.Net.Tests
         [Test]
         public void Test001()
         {
+            var toolManager = new ToolManager();
+            var deviceManager = new DeviceManager(toolManager);
+            var discManager = new DiscManager(toolManager);
 
+            var device = deviceManager.GetDevices().SingleOrDefault();
+            var currentDisc = discManager.GetDisc(device);
+            var updatedDisc = currentDisc.Clone();
+
+            updatedDisc.Title = string.Empty;
+            updatedDisc.Tracks.Clear();
+
+            var actionBuilder = new ActionBuilder();
+            var actions = actionBuilder.GetActions(device, currentDisc, updatedDisc);
+
+            //Change title, remove existing tracks.
+            Assert.AreEqual(currentDisc.Tracks.Count + 1, actions.Count);
+
+            var result = discManager.ApplyActions(device, actions, this.Status, true);
+            Assert.AreEqual(ResultStatus.Success, result.Status);
         }
 
         [TestCase(Compression.None)]

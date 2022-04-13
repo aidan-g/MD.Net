@@ -18,7 +18,17 @@ namespace MD.Net
 
         public int Exec(Process process, out string output, out string error)
         {
-            return this.Exec(process, Collector<string>.Collect(StringAggregator.NewLine, out output), Collector<string>.Collect(StringAggregator.NewLine, out error));
+            var _output = default(Func<string>);
+            var _error = default(Func<string>);
+            try
+            {
+                return this.Exec(process, Collector<string>.Collect(StringAggregator.NewLine, out _output), Collector<string>.Collect(StringAggregator.NewLine, out _error));
+            }
+            finally
+            {
+                output = _output();
+                error = _error();
+            }
         }
 
         public int Exec(Process process, Action<string> outputHandler, Action<string> errorHandler)

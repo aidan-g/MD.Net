@@ -4,7 +4,7 @@ namespace MD.Net
 {
     public static class Collector<T>
     {
-        public static Action<T> Collect(IAggregator<T> aggregator, out T value)
+        public static Action<T> Collect(IAggregator<T> aggregator, out Func<T> value)
         {
             try
             {
@@ -12,7 +12,7 @@ namespace MD.Net
             }
             finally
             {
-                value = aggregator.Aggregate();
+                value = () => aggregator.Aggregate();
             }
         }
     }
