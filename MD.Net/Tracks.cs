@@ -7,7 +7,7 @@ namespace MD.Net
 {
     public class Tracks : ITracks
     {
-        public Tracks()
+        private Tracks()
         {
             this.Store = new List<ITrack>();
         }
@@ -18,6 +18,8 @@ namespace MD.Net
         }
 
         public IList<ITrack> Store { get; private set; }
+
+        internal bool IsUpdatable { get; set; }
 
         public ITrack this[int position]
         {
@@ -35,19 +37,24 @@ namespace MD.Net
             }
         }
 
-        public ITrack Add()
+        public ITrack Add(string location, Compression compression)
         {
             var position = 0;
             if (this.Store.Any())
             {
                 position = this.Store.Max(track => track.Position) + 1;
             }
-            return this.Add(position);
+            {
+                var track = new Track(position, Protection.None, compression, TimeSpan.Zero, string.Empty)
+                {
+                    Location = location
+                };
+                return this.Add(track);
+            }
         }
 
-        protected ITrack Add(int position)
+        public ITrack Add(ITrack track)
         {
-            var track = new Track(position, Protection.None, Compression.None, TimeSpan.Zero, String.Empty);
             this.Store.Add(track);
             return track;
         }
@@ -75,6 +82,19 @@ namespace MD.Net
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.Store.GetEnumerator();
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = default(int);
+            unchecked
+            {
+                foreach (var track in this)
+                {
+                    hashCode += track.GetHashCode();
+                }
+            }
+            return hashCode;
         }
 
         public override bool Equals(object obj)

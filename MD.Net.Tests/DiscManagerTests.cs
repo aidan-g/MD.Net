@@ -88,7 +88,7 @@ namespace MD.Net.Tests
                 updatedDisc,
                 new[]
                 {
-                    new UpdateTrackNameAction(device, currentDisc.Tracks[1], updatedDisc.Tracks[1])
+                    new UpdateTrackNameAction(device, currentDisc, updatedDisc, currentDisc.Tracks[1], updatedDisc.Tracks[1])
                 }
             );
             var discManager = new DiscManager(toolManager);
@@ -96,8 +96,8 @@ namespace MD.Net.Tests
             Assert.AreEqual(ResultStatus.Success, result.Status);
         }
 
-        [TestCase(@"C:\My Music\Test.wav", "This is a test.")]
-        public void AddTrack(string location, string name)
+        [TestCase(@"C:\My Music\Test.wav", Compression.None, "This is a test.")]
+        public void AddTrack(string location, Compression compression, string name)
         {
             var toolManager = MockRepository.GenerateStrictMock<IToolManager>();
             toolManager.Expect(tm => tm.Start(Tools.NETMDCLI, string.Format("{0} \"{1}\" \"{2}\"", Constants.NETMDCLI_SEND, location, name))).Return(null);
@@ -108,8 +108,7 @@ namespace MD.Net.Tests
             var track3 = new Track(2, Protection.None, Compression.None, TimeSpan.Zero, string.Empty);
             var currentDisc = new Disc(string.Empty, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, new Tracks(new[] { track1, track2, track3 }));
             var updatedDisc = new Disc(currentDisc);
-            var track = updatedDisc.Tracks.Add();
-            track.Location = location;
+            var track = updatedDisc.Tracks.Add(location, compression);
             track.Name = name;
             var actions = new Actions(
                 device,
@@ -117,7 +116,7 @@ namespace MD.Net.Tests
                 updatedDisc,
                 new[]
                 {
-                    new AddTrackAction(device, track)
+                    new AddTrackAction(device, currentDisc, updatedDisc, track)
                 }
             );
             var discManager = new DiscManager(toolManager);
@@ -145,7 +144,7 @@ namespace MD.Net.Tests
                 updatedDisc,
                 new[]
                 {
-                    new RemoveTrackAction(device, track)
+                    new RemoveTrackAction(device, currentDisc, updatedDisc, track)
                 }
             );
             var discManager = new DiscManager(toolManager);

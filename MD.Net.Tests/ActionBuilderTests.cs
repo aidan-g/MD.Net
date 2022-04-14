@@ -42,8 +42,8 @@ namespace MD.Net.Tests
             Assert.IsTrue(object.ReferenceEquals(updatedDisc.Tracks[1], action.UpdatedTrack));
         }
 
-        [Test]
-        public void AddTrack()
+        [TestCase(@"C:\My Music\Test.wav", Compression.None, "This is a test.")]
+        public void AddTrack(string location, Compression compression, string name)
         {
             var discActionBuilder = new ActionBuilder();
             var device = default(IDevice);
@@ -52,7 +52,8 @@ namespace MD.Net.Tests
             var track3 = new Track(2, Protection.None, Compression.None, TimeSpan.Zero, string.Empty);
             var currentDisc = new Disc(string.Empty, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, new Tracks(new[] { track1, track2, track3 }));
             var updatedDisc = new Disc(currentDisc);
-            var track = updatedDisc.Tracks.Add();
+            var track = updatedDisc.Tracks.Add(location, compression);
+            track.Name = name;
             var actions = discActionBuilder.GetActions(device, currentDisc, updatedDisc);
             Assert.AreEqual(1, actions.Count);
             var action = actions.First() as AddTrackAction;

@@ -6,17 +6,17 @@ namespace MD.Net
     {
         string Id { get; }
 
-        int Position { get; set; }
+        int Position { get; }
 
         Protection Protection { get; }
 
-        Compression Compression { get; set; }
+        Compression Compression { get; }
 
         TimeSpan Time { get; }
 
         string Name { get; set; }
 
-        string Location { get; set; }
+        string Location { get; }
 
         ITrack Clone();
     }

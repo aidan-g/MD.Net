@@ -43,6 +43,19 @@ namespace MD.Net
             return new Track(this);
         }
 
+        public override int GetHashCode()
+        {
+            var hashCode = default(int);
+            unchecked
+            {
+                if (!string.IsNullOrEmpty(this.Id))
+                {
+                    hashCode += this.Id.GetHashCode();
+                }
+            }
+            return hashCode;
+        }
+
         public override bool Equals(object obj)
         {
             return this.Equals(obj as ITrack);

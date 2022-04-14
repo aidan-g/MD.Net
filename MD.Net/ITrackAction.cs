@@ -1,6 +1,6 @@
 ﻿namespace MD.Net
 {
-    public interface ITrackAction : IAction
+    public interface ITrackAction : IDiscAction
     {
         ITrack CurrentTrack { get; }
 

@@ -4,7 +4,7 @@ namespace MD.Net
 {
     public class RemoveTrackAction : TrackAction
     {
-        public RemoveTrackAction(IDevice device, ITrack track) : base(device, track, Track.None)
+        public RemoveTrackAction(IDevice device, IDisc currentDisc, IDisc updatedDisc, ITrack track) : base(device, currentDisc, updatedDisc, track, Track.None)
         {
 
         }
@@ -27,6 +27,12 @@ namespace MD.Net
             {
                 toolManager.Throw(process, error);
             }
+        }
+
+        public override void Commit()
+        {
+            this.CurrentDisc.Tracks.Remove(this.CurrentTrack);
+            base.Commit();
         }
     }
 }

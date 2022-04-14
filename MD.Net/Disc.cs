@@ -38,7 +38,25 @@ namespace MD.Net
 
         public IDisc Clone()
         {
-            return new Disc(this);
+            var disc = new Disc(this);
+            if (disc.Tracks is Tracks tracks)
+            {
+                tracks.IsUpdatable = true;
+            }
+            return disc;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = default(int);
+            unchecked
+            {
+                if (!string.IsNullOrEmpty(this.Id))
+                {
+                    hashCode += this.Id.GetHashCode();
+                }
+            }
+            return hashCode;
         }
 
         public override bool Equals(object obj)

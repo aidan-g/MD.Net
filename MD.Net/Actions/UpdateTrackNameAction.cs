@@ -4,7 +4,7 @@ namespace MD.Net
 {
     public class UpdateTrackNameAction : TrackAction
     {
-        public UpdateTrackNameAction(IDevice device, ITrack currentTrack, ITrack updatedTrack) : base(device, currentTrack, updatedTrack)
+        public UpdateTrackNameAction(IDevice device, IDisc currentDisc, IDisc updatedDisc, ITrack currentTrack, ITrack updatedTrack) : base(device, currentDisc, updatedDisc, currentTrack, updatedTrack)
         {
 
         }
@@ -27,6 +27,12 @@ namespace MD.Net
             {
                 toolManager.Throw(process, error);
             }
+        }
+
+        public override void Commit()
+        {
+            this.CurrentTrack.Name = this.UpdatedTrack.Name;
+            base.Commit();
         }
     }
 }

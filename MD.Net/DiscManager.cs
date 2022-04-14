@@ -81,6 +81,7 @@ namespace MD.Net
                 try
                 {
                     action.Apply(this.ToolManager, status);
+                    action.Commit();
                 }
                 catch (Exception e)
                 {
@@ -111,6 +112,8 @@ namespace MD.Net
             return true;
         }
 
+#pragma warning disable 0169, 0649
+
         private struct _Disc
         {
             public string device;
@@ -138,5 +141,8 @@ namespace MD.Net
 
             public string name;
         }
+
+#pragma warning restore 0169, 0649
+
     }
 }

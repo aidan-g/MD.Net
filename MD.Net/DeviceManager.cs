@@ -53,9 +53,14 @@ namespace MD.Net
             return Result.Success;
         }
 
+#pragma warning disable 0169, 0649
+
         private struct _Device
         {
             public string device;
         }
+
+#pragma warning restore 0169, 0649
+
     }
 }

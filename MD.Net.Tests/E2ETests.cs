@@ -70,10 +70,8 @@ namespace MD.Net.Tests
                 {
                     input.CopyTo(writer);
                 }
-                var track = updatedDisc.Tracks.Add();
+                var track = updatedDisc.Tracks.Add(fileName, compression);
                 track.Name = "MD.Net.Tests - " + updatedDisc.Tracks.Count;
-                track.Location = fileName;
-                track.Compression = compression;
             }
 
             var actionBuilder = new ActionBuilder();

@@ -9,7 +9,9 @@ namespace MD.Net
 
         int Count { get; }
 
-        ITrack Add();
+        ITrack Add(string location, Compression compression);
+
+        ITrack Add(ITrack track);
 
         void Remove(ITrack track);
 

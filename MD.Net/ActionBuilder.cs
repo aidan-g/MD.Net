@@ -35,14 +35,14 @@ namespace MD.Net
                 }
                 if (!found)
                 {
-                    this.AddTrack(actions, device, updatedTrack);
+                    this.AddTrack(actions, device, currentDisc, updatedDisc, updatedTrack);
                 }
             }
         }
 
-        protected virtual void AddTrack(IList<IAction> actions, IDevice device, ITrack track)
+        protected virtual void AddTrack(IList<IAction> actions, IDevice device, IDisc currentDisc, IDisc updatedDisc, ITrack track)
         {
-            actions.Add(new AddTrackAction(device, track));
+            actions.Add(new AddTrackAction(device, currentDisc, updatedDisc, track));
         }
 
         protected virtual void UpdateTracks(IList<IAction> actions, IDevice device, IDisc currentDisc, IDisc updatedDisc)
@@ -55,17 +55,17 @@ namespace MD.Net
                     {
                         continue;
                     }
-                    this.UpdateTrack(actions, device, currentTrack, updatedTrack);
+                    this.UpdateTrack(actions, device, currentDisc, updatedDisc, currentTrack, updatedTrack);
                     break;
                 }
             }
         }
 
-        protected virtual void UpdateTrack(IList<IAction> actions, IDevice device, ITrack currentTrack, ITrack updatedTrack)
+        protected virtual void UpdateTrack(IList<IAction> actions, IDevice device, IDisc currentDisc, IDisc updatedDisc, ITrack currentTrack, ITrack updatedTrack)
         {
             if (!string.Equals(currentTrack.Name, updatedTrack.Name, StringComparison.OrdinalIgnoreCase))
             {
-                actions.Add(new UpdateTrackNameAction(device, currentTrack, updatedTrack));
+                actions.Add(new UpdateTrackNameAction(device, currentDisc, updatedDisc, currentTrack, updatedTrack));
             }
         }
 
@@ -85,14 +85,14 @@ namespace MD.Net
                 }
                 if (!found)
                 {
-                    this.RemoveTrack(actions, device, currentTrack);
+                    this.RemoveTrack(actions, device, currentDisc, updatedDisc, currentTrack);
                 }
             }
         }
 
-        protected virtual void RemoveTrack(IList<IAction> actions, IDevice device, ITrack track)
+        protected virtual void RemoveTrack(IList<IAction> actions, IDevice device, IDisc currentDisc, IDisc updatedDisc, ITrack track)
         {
-            actions.Add(new RemoveTrackAction(device, track));
+            actions.Add(new RemoveTrackAction(device, currentDisc, updatedDisc, track));
         }
     }
 }

@@ -28,5 +28,11 @@ namespace MD.Net
                 toolManager.Throw(process, error);
             }
         }
+
+        public override void Commit()
+        {
+            this.CurrentDisc.Title = this.UpdatedDisc.Title;
+            base.Commit();
+        }
     }
 }

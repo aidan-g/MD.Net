@@ -17,5 +17,10 @@
         }
 
         public abstract void Apply(IToolManager toolManager, IStatus status);
+
+        public virtual void Commit()
+        {
+            //Nothing to do.
+        }
     }
 }
