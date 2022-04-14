@@ -21,6 +21,10 @@ namespace MD.Net
             var error = default(string);
             var process = this.ToolManager.Start(Tools.NETMDCLI);
             var code = this.ToolManager.Exec(process, out output, out error);
+            if (code != 0)
+            {
+                this.ToolManager.Throw(process, error);
+            }
             return this.GetDisc(device, output);
         }
 

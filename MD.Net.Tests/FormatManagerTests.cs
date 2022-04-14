@@ -2,12 +2,35 @@
 using Rhino.Mocks;
 using System;
 using System.Diagnostics;
+using System.IO;
 
 namespace MD.Net.Tests
 {
     [TestFixture]
     public class FormatManagerTests
     {
+        [TestCase(Compression.LP2)]
+        [TestCase(Compression.LP4)]
+        [Explicit]
+        public void Convert(Compression compression)
+        {
+            var toolManager = new ToolManager();
+            var formatManager = new FormatManager(toolManager);
+            foreach (var name in new[] { "Track_001", "Track_002", "Track_003" })
+            {
+                var inputFileName = Path.Combine(Path.GetTempPath(), name + ".wav");
+                using (var reader = Resources.ResourceManager.GetStream(name))
+                {
+                    using (var writer = File.Create(inputFileName))
+                    {
+                        reader.CopyTo(writer);
+                    }
+                }
+                var outputFileName = formatManager.Convert(inputFileName, compression, Status.Ignore);
+                TestContext.WriteLine("Convert {0} -> {1} -> {2}", inputFileName, Enum.GetName(typeof(Compression), compression), outputFileName);
+            }
+        }
+
         [TestCase(@"C:\My Music\Test.wav", @"C:\My Music\Test.at3", Compression.LP2, "128")]
         [TestCase(@"C:\My Music\Test.wav", @"C:\My Music\Test.at3", Compression.LP4, "64")]
         public void Convert(string inputFileName, string outputFileName, Compression compression, string bitrate)
@@ -26,6 +49,28 @@ namespace MD.Net.Tests
             }
             Assert.AreEqual(outputFileName, formatManager.Convert(inputFileName, compression, status));
             status.VerifyAllExpectations();
+        }
+
+        [Test]
+        [Explicit]
+        public void Error_Unsupported()
+        {
+            var toolManager = new ToolManager();
+            var formatManager = new FormatManager(toolManager);
+            var inputFileName = Path.GetTempFileName();
+            try
+            {
+                var outputFileName = formatManager.Convert(inputFileName, Compression.LP2, Status.Ignore);
+                Assert.Fail();
+            }
+            catch (ToolException e)
+            {
+                Assert.IsTrue(e.Message.Contains("unsupported", true));
+            }
+            finally
+            {
+                File.Delete(inputFileName);
+            }
         }
     }
 }

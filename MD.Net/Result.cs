@@ -1,9 +1,23 @@
-﻿namespace MD.Net
+﻿using MD.Net.Resources;
+
+namespace MD.Net
 {
     public class Result : IResult
     {
         public Result(string message, ResultStatus status)
         {
+            if (string.IsNullOrEmpty(message))
+            {
+                switch (status)
+                {
+                    case ResultStatus.Success:
+                        message = Strings.Result_Success;
+                        break;
+                    case ResultStatus.Failure:
+                        message = Strings.Result_UnknownError;
+                        break;
+                }
+            }
             this.Message = message;
             this.Status = status;
         }

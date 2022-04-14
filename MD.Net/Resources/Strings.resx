@@ -129,6 +129,18 @@
   <data name="RemoveTrackAction.Description" xml:space="preserve">
     <value>Deleting track: {0}</value>
   </data>
+  <data name="Result.Success" xml:space="preserve">
+    <value>OK.</value>
+  </data>
+  <data name="Result.UnknownError" xml:space="preserve">
+    <value>Unknown error.</value>
+  </data>
+  <data name="ToolException.Message" xml:space="preserve">
+    <value>Tool process "{0} {1}" exited with code {2}: {3}</value>
+  </data>
+  <data name="ToolException.UnknownError" xml:space="preserve">
+    <value>Unknown error.</value>
+  </data>
   <data name="UpdateDiscTitleAction.Description" xml:space="preserve">
     <value>Renaming disc: {0}</value>
   </data>

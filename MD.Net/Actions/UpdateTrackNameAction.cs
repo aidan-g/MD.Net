@@ -23,6 +23,10 @@ namespace MD.Net
             var error = default(string);
             var process = toolManager.Start(Tools.NETMDCLI, string.Format("{0} {1} {2}", Constants.NETMDCLI_RENAME, this.CurrentTrack.Position, this.UpdatedTrack.Name));
             var code = toolManager.Exec(process, out output, out error);
+            if (code != 0)
+            {
+                toolManager.Throw(process, error);
+            }
         }
     }
 }

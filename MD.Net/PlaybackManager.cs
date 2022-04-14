@@ -18,6 +18,10 @@ namespace MD.Net
             var error = default(string);
             var process = this.ToolManager.Start(Tools.NETMDCLI, Constants.NETMDCLI_STATUS);
             var code = this.ToolManager.Exec(process, out output, out error);
+            if (code != 0)
+            {
+                this.ToolManager.Throw(process, error);
+            }
             name = default(string);
             position = default(TimeSpan);
             if (string.IsNullOrEmpty(output))
@@ -48,6 +52,10 @@ namespace MD.Net
             var error = default(string);
             var process = this.ToolManager.Start(Tools.NETMDCLI, Constants.NETMDCLI_PLAY);
             var code = this.ToolManager.Exec(process, out output, out error);
+            if (code != 0)
+            {
+                this.ToolManager.Throw(process, error);
+            }
         }
 
         public void Play(IDevice device, ITrack track)
@@ -56,6 +64,10 @@ namespace MD.Net
             var error = default(string);
             var process = this.ToolManager.Start(Tools.NETMDCLI, string.Format("{0} {1}", Constants.NETMDCLI_PLAY, track.Position));
             var code = this.ToolManager.Exec(process, out output, out error);
+            if (code != 0)
+            {
+                this.ToolManager.Throw(process, error);
+            }
         }
 
         public void Next(IDevice device)
@@ -64,6 +76,10 @@ namespace MD.Net
             var error = default(string);
             var process = this.ToolManager.Start(Tools.NETMDCLI, Constants.NETMDCLI_NEXT);
             var code = this.ToolManager.Exec(process, out output, out error);
+            if (code != 0)
+            {
+                this.ToolManager.Throw(process, error);
+            }
         }
 
         public void Previous(IDevice device)
@@ -72,6 +88,10 @@ namespace MD.Net
             var error = default(string);
             var process = this.ToolManager.Start(Tools.NETMDCLI, Constants.NETMDCLI_PREVIOUS);
             var code = this.ToolManager.Exec(process, out output, out error);
+            if (code != 0)
+            {
+                this.ToolManager.Throw(process, error);
+            }
         }
 
         public void Pause(IDevice device)
@@ -80,6 +100,10 @@ namespace MD.Net
             var error = default(string);
             var process = this.ToolManager.Start(Tools.NETMDCLI, Constants.NETMDCLI_PAUSE);
             var code = this.ToolManager.Exec(process, out output, out error);
+            if (code != 0)
+            {
+                this.ToolManager.Throw(process, error);
+            }
         }
 
         public void Stop(IDevice device)
@@ -88,6 +112,10 @@ namespace MD.Net
             var error = default(string);
             var process = this.ToolManager.Start(Tools.NETMDCLI, Constants.NETMDCLI_STOP);
             var code = this.ToolManager.Exec(process, out output, out error);
+            if (code != 0)
+            {
+                this.ToolManager.Throw(process, error);
+            }
         }
 
         public void Seek(IDevice device, TimeSpan position)
@@ -96,6 +124,10 @@ namespace MD.Net
             var error = default(string);
             var process = this.ToolManager.Start(Tools.NETMDCLI, string.Format("{0} {1} {2} {3} {4}", Constants.NETMDCLI_SETTIME, position.Hours, position.Minutes, position.Seconds, Utility.MSToFrames(position.Milliseconds)));
             var code = this.ToolManager.Exec(process, out output, out error);
+            if (code != 0)
+            {
+                this.ToolManager.Throw(process, error);
+            }
         }
     }
 }

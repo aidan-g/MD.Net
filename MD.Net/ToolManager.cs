@@ -1,5 +1,7 @@
-﻿using System;
+﻿using MD.Net.Resources;
+using System;
 using System.Diagnostics;
+using System.Text;
 
 namespace MD.Net
 {
@@ -18,16 +20,16 @@ namespace MD.Net
 
         public int Exec(Process process, out string output, out string error)
         {
-            var _output = default(Func<string>);
-            var _error = default(Func<string>);
+            var _output = new StringBuilder();
+            var _error = new StringBuilder();
             try
             {
-                return this.Exec(process, Collector<string>.Collect(StringAggregator.NewLine, out _output), Collector<string>.Collect(StringAggregator.NewLine, out _error));
+                return this.Exec(process, data => _output.AppendLine(data), data => _error.AppendLine(data));
             }
             finally
             {
-                output = _output();
-                error = _error();
+                output = _output.ToString();
+                error = _error.ToString();
             }
         }
 
@@ -35,11 +37,17 @@ namespace MD.Net
         {
             process.OutputDataReceived += (sender, e) =>
             {
-                outputHandler(e.Data);
+                if (!string.IsNullOrEmpty(e.Data))
+                {
+                    outputHandler(e.Data);
+                }
             };
             process.ErrorDataReceived += (sender, e) =>
             {
-                errorHandler(e.Data);
+                if (!string.IsNullOrEmpty(e.Data))
+                {
+                    errorHandler(e.Data);
+                }
             };
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
@@ -70,7 +78,11 @@ namespace MD.Net
 
         private static string GetMessage(string path, string args, int code, string message)
         {
-            return string.Format("Tool process \"{0} {1}\" exited with code {2}: {3}", path, args, code, message);
+            if (string.IsNullOrEmpty(message))
+            {
+                message = Strings.ToolException_UnknownError;
+            }
+            return string.Format(Strings.ToolException_Message, path, args, code, message);
         }
     }
 }

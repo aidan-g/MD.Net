@@ -97,6 +97,42 @@ namespace MD.Net.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to OK..
+        /// </summary>
+        internal static string Result_Success {
+            get {
+                return ResourceManager.GetString("Result.Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown error..
+        /// </summary>
+        internal static string Result_UnknownError {
+            get {
+                return ResourceManager.GetString("Result.UnknownError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tool process &quot;{0} {1}&quot; exited with code {2}: {3}.
+        /// </summary>
+        internal static string ToolException_Message {
+            get {
+                return ResourceManager.GetString("ToolException.Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown error..
+        /// </summary>
+        internal static string ToolException_UnknownError {
+            get {
+                return ResourceManager.GetString("ToolException.UnknownError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Renaming disc: {0}.
         /// </summary>
         internal static string UpdateDiscTitleAction_Description {
