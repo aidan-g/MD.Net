@@ -19,6 +19,7 @@ namespace MD.Net.Tests
                 Assert.AreEqual(384, info.Framesize);
                 Assert.AreEqual(44100, info.SampleRate);
                 Assert.AreEqual(OMAHeader.OMA_STEREO, info.ChannelFormat);
+                Assert.AreEqual(132300, OMAHeader.GetBitRate(info));
             }
         }
 
@@ -34,6 +35,7 @@ namespace MD.Net.Tests
                 Assert.AreEqual(192, info.Framesize);
                 Assert.AreEqual(44100, info.SampleRate);
                 Assert.AreEqual(OMAHeader.OMA_JOINT_STEREO, info.ChannelFormat);
+                Assert.AreEqual(66150, OMAHeader.GetBitRate(info));
             }
         }
 

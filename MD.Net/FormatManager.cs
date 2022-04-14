@@ -64,7 +64,7 @@ namespace MD.Net
                     wavInfo.Format = WavHeader.WAV_FORMAT_ATRAC3;
                     wavInfo.ChannelCount = 2;
                     wavInfo.SampleRate = omaInfo.SampleRate;
-                    wavInfo.ByteRate = 8268;
+                    wavInfo.ByteRate = OMAHeader.GetBitRate(omaInfo) / 8;
                     wavInfo.BlockAlign = omaInfo.Framesize;
                     wavInfo.BitsPerSample = 0;
                     using (var writer = File.Create(result))

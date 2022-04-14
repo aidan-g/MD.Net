@@ -197,6 +197,18 @@ namespace MD.Net
             return 0;
         }
 
+        public static int GetBitRate(OMAInfo info)
+        {
+            switch (info.Codec)
+            {
+                case OMA_CODEC_ATRAC3:
+                    return info.SampleRate * info.Framesize * 8 / 1024;
+                case OMA_CODEC_ATRAC3PLUS:
+                    return info.SampleRate * info.Framesize * 8 / 2048;
+            }
+            return 0;
+        }
+
         public struct OMAInfo
         {
             public int Codec;
