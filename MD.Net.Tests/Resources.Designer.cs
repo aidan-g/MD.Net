@@ -94,6 +94,27 @@ namespace MD.Net.Tests {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to audio file size : 53785560 bytes
+        ///supported audio file detected
+        ///data chunk position at 36
+        ///audio data size read from file :           53745552 bytes
+        ///audio data size calculated from file size: 53785516 bytes
+        ///netmd_acquire_dev: No error
+        ///netmd_secure_leave_session : No error
+        ///netmd_secure_set_track_protection : No error
+        ///netmd_secure_enter_session : No error
+        ///netmd_secure_send_key_data : No error
+        ///netmd_secure_session_key_exchange : No error
+        ///netmd_secure_setup_download : No error
+        ///generating packet 1 : 10 [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Send_SP {
+            get {
+                return ResourceManager.GetString("Send_SP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;device&quot;:&quot;Sony MDS-JE780\/JB980&quot;,
         ///  &quot;title&quot;:&quot;Evanescence&quot;,

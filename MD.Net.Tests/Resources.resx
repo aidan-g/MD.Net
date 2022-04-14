@@ -127,6 +127,9 @@
   <data name="OMA_ATRAC_LP4" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\oma_atrac_lp4.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="Send_SP" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\send_sp.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="Sony_MDS_JE780___Evanescence" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\sony mds-je780 - evanescence.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>

@@ -1,12 +1,17 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 
 namespace MD.Net
 {
-    public class PercentStatusEmitter : StatusEmitter
+    public class DefaultStatusEmitter : StatusEmitter
     {
+        public const string GROUP_POSITION = "POSITION";
+
+        public const string GROUP_COUNT = "COUNT";
+
         const int COUNT = 100;
 
-        public PercentStatusEmitter(string message, StatusType type, Regex regex, IStatus status) : base(message, type, status)
+        public DefaultStatusEmitter(string message, StatusType type, Regex regex, IStatus status) : base(message, type, status)
         {
             this.Regex = regex;
             this.Percent = -1;
@@ -32,11 +37,17 @@ namespace MD.Net
             {
                 return;
             }
-            var percent = default(int);
-            if (!int.TryParse(match.Groups[1].Value, out percent))
+            var position = default(long);
+            if (!long.TryParse(match.Groups[GROUP_POSITION].Value, out position))
             {
                 return;
             }
+            var count = default(long);
+            if (!long.TryParse(match.Groups[GROUP_COUNT].Value, out count))
+            {
+                return;
+            }
+            var percent = Convert.ToInt32((Convert.ToDouble(position) / count) * 100);
             while (this.Percent < percent)
             {
                 this.Percent++;

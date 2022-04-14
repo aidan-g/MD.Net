@@ -1,11 +1,18 @@
 ﻿using MD.Net.Resources;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace MD.Net
 {
     public class AddTrackAction : TrackAction
     {
+        static readonly Regex NETMDCLI_PROGRESS = new Regex(
+            @"(?<" + DefaultStatusEmitter.GROUP_POSITION + @">\d+) of (?<" + DefaultStatusEmitter.GROUP_COUNT + @">\d+) bytes \(\d\d?%\) transferred",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture
+        );
+
         public AddTrackAction(IDevice device, IDisc currentDisc, IDisc updatedDisc, ITrack track) : base(device, currentDisc, updatedDisc, Track.None, track)
         {
 
@@ -35,21 +42,23 @@ namespace MD.Net
 
         public override void Apply(IToolManager toolManager, IStatus status)
         {
-            var output = default(string);
-            var error = default(string);
             var process = default(Process);
             if (!string.IsNullOrEmpty(this.UpdatedTrack.Name))
             {
-                process = toolManager.Start(Tools.NETMDCLI, string.Format("{0} \"{1}\" \"{2}\"", Constants.NETMDCLI_SEND, this.UpdatedTrack.Location, this.UpdatedTrack.Name));
+                process = toolManager.Start(Tools.NETMDCLI, string.Format("{0} \"{1}\" \"{2}\" {3}", Constants.NETMDCLI_SEND, this.UpdatedTrack.Location, this.UpdatedTrack.Name, Constants.NETMDCLI_VERBOSE));
             }
             else
             {
-                process = toolManager.Start(Tools.NETMDCLI, string.Format("{0} \"{1}\"", Constants.NETMDCLI_SEND, this.UpdatedTrack.Location));
+                process = toolManager.Start(Tools.NETMDCLI, string.Format("{0} \"{1}\" {2}", Constants.NETMDCLI_SEND, this.UpdatedTrack.Location, Constants.NETMDCLI_VERBOSE));
             }
-            var code = toolManager.Exec(process, out output, out error);
-            if (code != 0)
+            using (var emitter = new DefaultStatusEmitter(this.Description, StatusType.Transfer, NETMDCLI_PROGRESS, status))
             {
-                toolManager.Throw(process, error);
+                var error = new StringBuilder();
+                var code = toolManager.Exec(process, emitter.Action, data => error.AppendLine(data));
+                if (code != 0)
+                {
+                    toolManager.Throw(process, error.ToString());
+                }
             }
         }
 

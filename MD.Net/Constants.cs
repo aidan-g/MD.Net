@@ -28,6 +28,8 @@
 
         public const string NETMDCLI_STATUS = "status";
 
+        public const string NETMDCLI_VERBOSE = "-v";
+
         public const string NETMDCLI_CURRENT_TRACK = "Current track: ";
 
         public const string NETMDCLI_CURRENT_POSITION = "Current playback position: ";
