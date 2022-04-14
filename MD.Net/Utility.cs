@@ -136,6 +136,16 @@ namespace MD.Net
             return buffer;
         }
 
+        public static byte[] BEWord32(int value)
+        {
+            var buffer = BitConverter.GetBytes(value);
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(buffer);
+            }
+            return buffer;
+        }
+
         public static bool BufferEquals(byte[] subject, byte[] value, int index)
         {
             for (var a = index; a < value.Length; a++)

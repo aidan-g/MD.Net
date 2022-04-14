@@ -1,10 +1,14 @@
 ﻿using System;
 using System.IO;
+using System.Text;
+using System.Linq;
 
 namespace MD.Net
 {
     public static class OMAHeader
     {
+        public static byte[] OMA_TAG_EA3 = Encoding.ASCII.GetBytes("EA3");
+
         public const int OMA_HEADER_SIZE = 96;
 
         public const byte OMA_CODEC_ATRAC3 = 0;
@@ -19,7 +23,17 @@ namespace MD.Net
 
         public const byte OMA_JOINT_STEREO = 2;
 
-        public static int[] OMA_CHANNEL_ID = { OMA_MONO, OMA_STEREO };
+        public const byte OMA_3 = 3;
+
+        public const byte OMA_4 = 4;
+
+        public const byte OMA_6 = 5;
+
+        public const byte OMA_7 = 6;
+
+        public const byte OMA_8 = 7;
+
+        public static int[] OMA_CHANNEL_ID = { OMA_MONO, OMA_STEREO, OMA_3, OMA_4, OMA_6, OMA_7, OMA_8 };
 
         public static bool Read(Stream stream, out OMAInfo info)
         {
@@ -30,7 +44,7 @@ namespace MD.Net
                 info = default(OMAInfo);
                 return false;
             }
-            if (buffer[0] != 'E' || buffer[1] != 'A' || buffer[2] != '3')
+            if (!Utility.BufferEquals(buffer, OMA_TAG_EA3, 0))
             {
                 //Not OMA?
                 info = default(OMAInfo);
@@ -42,7 +56,7 @@ namespace MD.Net
                 info = default(OMAInfo);
                 return false;
             }
-            var parameters = ReadParameters(buffer[33], buffer[34], buffer[35]);
+            var parameters = buffer[33] << 16 | buffer[34] << 8 | buffer[35];
             switch (buffer[32])
             {
                 case OMA_CODEC_ATRAC3:
@@ -54,11 +68,6 @@ namespace MD.Net
                     info = default(OMAInfo);
                     return false;
             }
-        }
-
-        private static int ReadParameters(byte a, byte b, byte c)
-        {
-            return a << 16 | b << 8 | c;
         }
 
         private static bool ReadAtrac3(int parameters, out OMAInfo info)
@@ -105,33 +114,49 @@ namespace MD.Net
         public static bool Write(Stream stream, OMAInfo info)
         {
             var writer = new BinaryWriter(stream);
-            writer.Write('E');
-            writer.Write('A');
-            writer.Write('3');
-            writer.Write(0x1);
-            writer.Write(0x0);
-            writer.Write(0x60);
-            writer.Write(0xff);
-            writer.Write(0xff);
-            while (stream.Position < 31)
+            writer.Write(OMA_TAG_EA3);
+            writer.Write((byte)0x1);
+            writer.Write((byte)0x0);
+            writer.Write((byte)OMA_HEADER_SIZE);
+            writer.Write((byte)0xff);
+            writer.Write((byte)0xff);
+            while (stream.Position < 32)
             {
-                writer.Write(0x0);
+                writer.Write((byte)0x0);
             }
-            writer.Write((byte)info.Codec);
-            var parameters = WriteParameters(info.Framesize, info.SampleRate, info.ChannelFormat);
-            writer.Write(parameters[0]);
-            writer.Write(parameters[1]);
-            writer.Write(parameters[2]);
+            switch (info.Codec)
+            {
+                case OMA_CODEC_ATRAC3:
+                    WriteAtrac3(writer, info);
+                    break;
+                case OMA_CODEC_ATRAC3PLUS:
+                    WriteAtrac3Plus(writer, info);
+                    break;
+            }
             while (stream.Position < OMA_HEADER_SIZE)
             {
-                writer.Write(0x0);
+                writer.Write((byte)0x0);
             }
             return true;
         }
 
-        private static byte[] WriteParameters(int framesize, int sampleRate, int channelFormat)
+        private static void WriteAtrac3(BinaryWriter writer, OMAInfo info)
         {
-            throw new NotImplementedException();
+            var jointStereo = info.ChannelFormat == OMA_JOINT_STEREO ? 1 : 0;
+            var sampleRateIndex = GetSampleRateIndex(info.SampleRate);
+            var frameSize = info.Framesize / 8;
+            var parameters = (OMA_CODEC_ATRAC3 << 24) | (jointStereo << 17) | (sampleRateIndex << 13) | frameSize;
+            writer.Write(Utility.BEWord32(parameters));
+        }
+
+        //This code is untested, I don't have access to any ATRAC3plus media.
+        private static void WriteAtrac3Plus(BinaryWriter writer, OMAInfo info)
+        {
+            var channelFormatIndex = GetChannelFormatIndex(info.ChannelFormat);
+            var sampleRateIndex = GetSampleRateIndex(info.SampleRate);
+            var frameSize = (info.Framesize - 8) / 8;
+            var parameters = (OMA_CODEC_ATRAC3PLUS << 24) | ((channelFormatIndex + 1) << 10) | (sampleRateIndex << 13) | frameSize;
+            writer.Write(Utility.BEWord32(parameters));
         }
 
         private static int GetChannelFormat(int index)
@@ -142,12 +167,32 @@ namespace MD.Net
             }
             return 0;
         }
+        public static int GetChannelFormatIndex(int channelFormat)
+        {
+            var index = Array.IndexOf(OMA_CHANNEL_ID, channelFormat);
+            if (index >= 0)
+            {
+                return index;
+            }
+            return 0;
+        }
+
 
         private static int GetSampleRate(int index)
         {
             if (index < OMA_SAMPLERATES.Length)
             {
                 return OMA_SAMPLERATES[index];
+            }
+            return 0;
+        }
+
+        public static int GetSampleRateIndex(int sampleRate)
+        {
+            var index = Array.IndexOf(OMA_SAMPLERATES, sampleRate);
+            if (index >= 0)
+            {
+                return index;
             }
             return 0;
         }

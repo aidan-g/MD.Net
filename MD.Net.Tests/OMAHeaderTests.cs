@@ -38,14 +38,13 @@ namespace MD.Net.Tests
         }
 
         [Test]
-        [Explicit("Not yet implemented.")]
         public void Write_ATRAC3_LP2()
         {
             var info = default(OMAHeader.OMAInfo);
             info.Codec = OMAHeader.OMA_CODEC_ATRAC3;
-            info.Framesize = 192;
+            info.Framesize = 384;
             info.SampleRate = 44100;
-            info.ChannelFormat = OMAHeader.OMA_JOINT_STEREO;
+            info.ChannelFormat = OMAHeader.OMA_STEREO;
             using (var writer = new MemoryStream())
             {
                 var result = OMAHeader.Write(writer, info);
@@ -57,7 +56,6 @@ namespace MD.Net.Tests
         }
 
         [Test]
-        [Explicit("Not yet implemented.")]
         public void Write_ATRAC3_LP4()
         {
             var info = default(OMAHeader.OMAInfo);
