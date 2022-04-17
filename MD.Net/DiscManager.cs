@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TinyJson;
 
 namespace MD.Net
@@ -73,6 +74,10 @@ namespace MD.Net
                     return Result.Failure(message);
                 }
             }
+            Parallel.ForEach(actions, new ParallelOptions() { MaxDegreeOfParallelism = Settings.Threads }, action =>
+            {
+                action.Prepare(this.ToolManager, status);
+            });
             var position = 0;
             var count = actions.Count;
             foreach (var action in actions)
