@@ -8,10 +8,10 @@ namespace MD.Net.Tests
     [TestFixture]
     public class AddTrackActionTests
     {
-        [TestCase(@"C:\My Music\Test.wav")]
-        public void Apply(string location)
+        [TestCase(@"C:\My Music\Test.wav", Compression.None)]
+        public void Apply(string location, Compression compression)
         {
-            var track = new Track(0, Protection.None, Compression.None, TimeSpan.Zero, string.Empty)
+            var track = new Track(0, Protection.None, compression, TimeSpan.Zero, string.Empty)
             {
                 Location = location
             };
@@ -26,8 +26,11 @@ namespace MD.Net.Tests
             {
                 status.Expect(s => s.Update(Arg<string>.Is.Anything, Arg<int>.Is.Equal(a), Arg<int>.Is.Equal(100), Arg<StatusType>.Is.Equal(StatusType.Transfer))).Repeat.Once();
             }
-            var action = new AddTrackAction(Device.None, Disc.None, Disc.None, track);
-            action.Prepare(toolManager, Status.Ignore);
+            var formatManager = MockRepository.GenerateStub<IFormatManager>();
+            formatManager.Expect(fm => fm.Validate(location));
+            formatManager.Expect(fm => fm.Convert(location, compression, status)).Return(location);
+            var action = new AddTrackAction(formatManager, Device.None, Disc.None, Disc.None, track);
+            action.Prepare(toolManager, status);
             action.Apply(toolManager, status);
             action.Commit();
             status.VerifyAllExpectations();

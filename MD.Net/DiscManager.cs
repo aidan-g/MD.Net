@@ -31,7 +31,7 @@ namespace MD.Net
 
         protected IDisc GetDisc(IDevice device, string output)
         {
-            if (string.IsNullOrEmpty(output) || output.Contains(Constants.NETMDCLI_NO_DEVICE, true) || output.Contains(Constants.NETMDCLI_ERROR, true))
+            if (string.IsNullOrEmpty(output) || output.Contains(Constants.NETMDCLI_NO_DEVICE, true) || output.Contains(Constants.NETMDCLI_POLL_FAILED, true))
             {
                 return default(IDisc);
             }
@@ -69,7 +69,7 @@ namespace MD.Net
             var message = default(string);
             if (validate)
             {
-                if (!this.ValidateActions(device, actions, out message))
+                if (!this.ValidateDisc(device, actions.CurrentDisc, out message))
                 {
                     return Result.Failure(message);
                 }
@@ -105,12 +105,12 @@ namespace MD.Net
             return Result.Success;
         }
 
-        protected virtual bool ValidateActions(IDevice device, IActions actions, out string message)
+        protected virtual bool ValidateDisc(IDevice device, IDisc expectedDisc, out string message)
         {
-            var disc = this.GetDisc(device);
-            if (!disc.Equals(actions.CurrentDisc))
+            var actualDisc = this.GetDisc(device);
+            if (!actualDisc.Equals(expectedDisc))
             {
-                message = Strings.Error_DiscWasModified;
+                message = Strings.Error_UnexpectedDisc;
                 return false;
             }
             message = string.Empty;

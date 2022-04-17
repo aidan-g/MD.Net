@@ -70,11 +70,11 @@ namespace MD.Net.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The source disc was modified, cannot update..
+        ///   Looks up a localized string similar to The source disc state was unexpected, cannot update..
         /// </summary>
-        internal static string Error_DiscWasModified {
+        internal static string Error_UnexpectedDisc {
             get {
-                return ResourceManager.GetString("Error.DiscWasModified", resourceCulture);
+                return ResourceManager.GetString("Error.UnexpectedDisc", resourceCulture);
             }
         }
         
@@ -147,6 +147,15 @@ namespace MD.Net.Resources {
         internal static string UpdateTrackNameAction_Description {
             get {
                 return ResourceManager.GetString("UpdateTrackNameAction.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FIle &quot;{0}&quot; is unsupported. Expected WAVE 44.1kHz/16 bit/Stereo..
+        /// </summary>
+        internal static string WaveFormatException_Message {
+            get {
+                return ResourceManager.GetString("WaveFormatException.Message", resourceCulture);
             }
         }
     }

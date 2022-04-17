@@ -9,10 +9,11 @@ namespace MD.Net.Tests
     [TestFixture]
     public class FormatManagerTests
     {
-        [TestCase(Compression.LP2)]
-        [TestCase(Compression.LP4)]
+        [TestCase(Compression.None, WavHeader.WAV_FORMAT_PCM, 2, 44100, 16, 4, 176400)]
+        [TestCase(Compression.LP2, WavHeader.WAV_FORMAT_ATRAC3, 2, 44100, 0, 384, 16537)]
+        [TestCase(Compression.LP4, WavHeader.WAV_FORMAT_ATRAC3, 2, 44100, 0, 192, 8268)]
         [Explicit]
-        public void Convert(Compression compression)
+        public void Convert(Compression compression, int format, int channelCount, int sampleRate, int bitsPerSample, int blockAlign, int byteRate)
         {
             var toolManager = new ToolManager();
             var formatManager = new FormatManager(toolManager);
@@ -26,8 +27,22 @@ namespace MD.Net.Tests
                         reader.CopyTo(writer);
                     }
                 }
+                formatManager.Validate(inputFileName);
                 var outputFileName = formatManager.Convert(inputFileName, compression, Status.Ignore);
-                TestContext.WriteLine("Convert {0} -> {1} -> {2}", inputFileName, Enum.GetName(typeof(Compression), compression), outputFileName);
+                var info = default(WavHeader.WavInfo);
+                using (var reader = File.OpenRead(outputFileName))
+                {
+                    Assert.IsTrue(WavHeader.Read(reader, out info));
+                    Assert.AreEqual(reader.Length - WavHeader.WAV_HEADER_OFFSET, info.FileSize);
+                    Assert.AreEqual(format, info.Format);
+                    Assert.AreEqual(channelCount, info.ChannelCount);
+                    Assert.AreEqual(sampleRate, info.SampleRate);
+                    Assert.AreEqual(bitsPerSample, info.BitsPerSample);
+                    Assert.AreEqual(blockAlign, info.BlockAlign);
+                    Assert.AreEqual(byteRate, info.ByteRate);
+                    Assert.AreEqual(reader.Length - reader.Position, info.DataSize);
+                }
+                File.Delete(inputFileName);
             }
         }
 

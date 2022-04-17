@@ -99,6 +99,10 @@ namespace MD.Net.Tests
         [TestCase(@"C:\My Music\Test.wav", Compression.None, "This is a test.")]
         public void AddTrack(string location, Compression compression, string name)
         {
+            var status = Status.Ignore;
+            var formatManager = MockRepository.GenerateStub<IFormatManager>();
+            formatManager.Expect(fm => fm.Validate(location));
+            formatManager.Expect(fm => fm.Convert(location, compression, status)).Return(location);
             var toolManager = MockRepository.GenerateStrictMock<IToolManager>();
             toolManager.Expect(tm => tm.Start(Tools.NETMDCLI, string.Format("{0} \"{1}\" \"{2}\" {3}", Constants.NETMDCLI_SEND, location, name, Constants.NETMDCLI_VERBOSE))).Return(null);
             toolManager.Expect(tm => tm.Exec(Arg<Process>.Is.Anything, Arg<Action<string>>.Is.Anything, Arg<Action<string>>.Is.Anything)).Return(0);
@@ -116,11 +120,11 @@ namespace MD.Net.Tests
                 updatedDisc,
                 new[]
                 {
-                    new AddTrackAction(device, currentDisc, updatedDisc, track)
+                    new AddTrackAction(formatManager, device, currentDisc, updatedDisc, track)
                 }
             );
             var discManager = new DiscManager(toolManager);
-            var result = discManager.ApplyActions(device, actions, Status.Ignore, false);
+            var result = discManager.ApplyActions(device, actions, status, false);
             Assert.AreEqual(ResultStatus.Success, result.Status);
         }
 
@@ -172,7 +176,7 @@ namespace MD.Net.Tests
             );
             var result = discManager.ApplyActions(device, actions, Status.Ignore, true);
             Assert.AreEqual(ResultStatus.Failure, result.Status);
-            Assert.AreEqual(Strings.Error_DiscWasModified, result.Message);
+            Assert.AreEqual(Strings.Error_UnexpectedDisc, result.Message);
         }
     }
 }

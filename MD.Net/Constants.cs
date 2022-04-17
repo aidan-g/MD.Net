@@ -4,7 +4,7 @@
     {
         public const string NETMDCLI_NO_DEVICE = "no netmd device";
 
-        public const string NETMDCLI_ERROR = "error";
+        public const string NETMDCLI_POLL_FAILED = "netmd_poll failed";
 
         public const string NETMDCLI_PLAY = "play";
 

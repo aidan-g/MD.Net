@@ -1,4 +1,5 @@
 ﻿using MD.Net.Resources;
+using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -23,6 +24,39 @@ namespace MD.Net
 
         public IToolManager ToolManager { get; private set; }
 
+        public void Validate(string fileName)
+        {
+            if (!this.IsValid(fileName))
+            {
+                throw new WaveFormatException(fileName);
+            }
+        }
+
+        protected virtual bool IsValid(string fileName)
+        {
+            using (var reader = File.OpenRead(fileName))
+            {
+                var info = default(WavHeader.WavInfo);
+                if (!WavHeader.Read(reader, out info))
+                {
+                    return false;
+                }
+                if (info.SampleRate != 44100)
+                {
+                    return false;
+                }
+                if (info.BitsPerSample != 16)
+                {
+                    return false;
+                }
+                if (info.ChannelCount != 2)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public string Convert(string fileName, Compression compression, IStatus status)
         {
             switch (compression)
@@ -43,7 +77,7 @@ namespace MD.Net
             {
                 var error = new StringBuilder();
                 var code = this.ToolManager.Exec(process, emitter.Action, data => error.AppendLine(data));
-                if(code != 0)
+                if (code != 0)
                 {
                     this.ToolManager.Throw(process, error.ToString());
                 }
@@ -64,7 +98,7 @@ namespace MD.Net
                 if (OMAHeader.Read(reader, out omaInfo))
                 {
                     var wavInfo = default(WavHeader.WavInfo);
-                    wavInfo.FileSize = global::System.Convert.ToInt32(new FileInfo(fileName).Length);
+                    wavInfo.FileSize = WavHeader.GetFileSize(reader, wavInfo);
                     wavInfo.Format = WavHeader.WAV_FORMAT_ATRAC3;
                     wavInfo.ChannelCount = 2;
                     wavInfo.SampleRate = omaInfo.SampleRate;
@@ -79,6 +113,21 @@ namespace MD.Net
                 }
             }
             return result;
+        }
+    }
+
+    public class WaveFormatException : Exception
+    {
+        public WaveFormatException(string fileName) : base(GetMessage(fileName))
+        {
+            this.FileName = fileName;
+        }
+
+        public string FileName { get; private set; }
+
+        private static string GetMessage(string fileName)
+        {
+            return string.Format(Strings.WaveFormatException_Message, fileName);
         }
     }
 }

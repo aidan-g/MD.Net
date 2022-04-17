@@ -6,6 +6,13 @@ namespace MD.Net
 {
     public class ActionBuilder : IActionBuilder
     {
+        public ActionBuilder(IFormatManager formatManager)
+        {
+            this.FormatManager = formatManager;
+        }
+
+        public IFormatManager FormatManager { get; private set; }
+
         public IActions GetActions(IDevice device, IDisc currentDisc, IDisc updatedDisc)
         {
             var actions = new List<IAction>();
@@ -42,7 +49,7 @@ namespace MD.Net
 
         protected virtual void AddTrack(IList<IAction> actions, IDevice device, IDisc currentDisc, IDisc updatedDisc, ITrack track)
         {
-            actions.Add(new AddTrackAction(device, currentDisc, updatedDisc, track));
+            actions.Add(new AddTrackAction(this.FormatManager, device, currentDisc, updatedDisc, track));
         }
 
         protected virtual void UpdateTracks(IList<IAction> actions, IDevice device, IDisc currentDisc, IDisc updatedDisc)

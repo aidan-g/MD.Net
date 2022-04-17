@@ -19,19 +19,15 @@ namespace MD.Net
             var error = default(string);
             var process = this.ToolManager.Start(Tools.NETMDCLI);
             var code = this.ToolManager.Exec(process, out output, out error);
-            if (code != 0)
+            if (code != 0 || string.IsNullOrEmpty(output) || output.Contains(Constants.NETMDCLI_NO_DEVICE, true) || output.Contains(Constants.NETMDCLI_POLL_FAILED, true))
             {
-                this.ToolManager.Throw(process, error);
+                return Enumerable.Empty<IDevice>();
             }
             return this.GetDevices(output);
         }
 
         protected IEnumerable<IDevice> GetDevices(string output)
         {
-            if (string.IsNullOrEmpty(output) || output.Contains(Constants.NETMDCLI_NO_DEVICE, true) || output.Contains(Constants.NETMDCLI_ERROR, true))
-            {
-                return Enumerable.Empty<IDevice>();
-            }
             //Only a single device is supported.
             var device = output.FromJson<_Device>();
             return new[]

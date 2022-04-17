@@ -28,6 +28,7 @@ namespace MD.Net.Tests
         public void Test001()
         {
             var toolManager = new ToolManager();
+            var formatManager = new FormatManager(toolManager);
             var deviceManager = new DeviceManager(toolManager);
             var discManager = new DiscManager(toolManager);
 
@@ -38,7 +39,7 @@ namespace MD.Net.Tests
             updatedDisc.Title = string.Empty;
             updatedDisc.Tracks.Clear();
 
-            var actionBuilder = new ActionBuilder();
+            var actionBuilder = new ActionBuilder(formatManager);
             var actions = actionBuilder.GetActions(device, currentDisc, updatedDisc);
 
             //Change title, remove existing tracks.
@@ -58,6 +59,7 @@ namespace MD.Net.Tests
         public void Test002(Compression compression)
         {
             var toolManager = new ToolManager();
+            var formatManager = new FormatManager(toolManager);
             var deviceManager = new DeviceManager(toolManager);
             var discManager = new DiscManager(toolManager);
 
@@ -82,7 +84,7 @@ namespace MD.Net.Tests
                 track.Name = "MD.Net.Tests - " + updatedDisc.Tracks.Count;
             }
 
-            var actionBuilder = new ActionBuilder();
+            var actionBuilder = new ActionBuilder(formatManager);
             var actions = actionBuilder.GetActions(device, currentDisc, updatedDisc);
 
             //Change title, remove existing tracks, add 3 new tracks.

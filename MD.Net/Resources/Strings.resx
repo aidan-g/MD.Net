@@ -120,8 +120,8 @@
   <data name="AddTrackAction.Description" xml:space="preserve">
     <value>Creating track: {0}</value>
   </data>
-  <data name="Error.DiscWasModified" xml:space="preserve">
-    <value>The source disc was modified, cannot update.</value>
+  <data name="Error.UnexpectedDisc" xml:space="preserve">
+    <value>The source disc state was unexpected, cannot update.</value>
   </data>
   <data name="FormatManager.Description" xml:space="preserve">
     <value>Encoding track: {0}</value>
@@ -146,5 +146,8 @@
   </data>
   <data name="UpdateTrackNameAction.Description" xml:space="preserve">
     <value>Renaming track: {0}</value>
+  </data>
+  <data name="WaveFormatException.Message" xml:space="preserve">
+    <value>FIle "{0}" is unsupported. Expected WAVE 44.1kHz/16 bit/Stereo.</value>
   </data>
 </root>

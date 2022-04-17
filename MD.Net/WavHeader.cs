@@ -16,6 +16,8 @@ namespace MD.Net
 
         public static readonly string WAV_CHUNK_DATA = "data";
 
+        public const int WAV_HEADER_OFFSET = 8;
+
         public const int WAV_FORMAT_PCM = 0x1;
 
         public const int WAV_FORMAT_ATRAC3 = 0x270;
@@ -161,13 +163,22 @@ namespace MD.Net
             writer.Write(Encoding.ASCII.GetBytes(WAV_CHUNK_DATA));
             if (info.DataSize == 0)
             {
+                //If the data size was not specified, calculate it.
                 info.DataSize = GetDataSize(info);
             }
             writer.Write(Utility.LEWord32(info.DataSize));
             return true;
         }
 
-        public static int GetDataSize(WavInfo info)
+        public static int GetFileSize(Stream stream, WavInfo info)
+        {
+            var fileSize = Convert.ToInt32(
+                ((stream.Length - stream.Position) + GetHeaderSize(info)) - WAV_HEADER_OFFSET
+            );
+            return fileSize;
+        }
+
+        public static int GetHeaderSize(WavInfo info)
         {
             var headerSize = 44;
             if (info.Data != null)
@@ -185,7 +196,13 @@ namespace MD.Net
                     }
                 }
             }
-            return info.FileSize - headerSize;
+            return headerSize;
+        }
+
+        public static int GetDataSize(WavInfo info)
+        {
+            var dataSize = info.FileSize - (GetHeaderSize(info) - WAV_HEADER_OFFSET);
+            return dataSize;
         }
 
         public struct WavInfo

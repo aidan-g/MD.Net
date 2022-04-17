@@ -13,10 +13,12 @@ namespace MD.Net
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture
         );
 
-        public AddTrackAction(IDevice device, IDisc currentDisc, IDisc updatedDisc, ITrack track) : base(device, currentDisc, updatedDisc, Track.None, track)
+        public AddTrackAction(IFormatManager formatManager, IDevice device, IDisc currentDisc, IDisc updatedDisc, ITrack track) : base(device, currentDisc, updatedDisc, Track.None, track)
         {
-
+            this.FormatManager = formatManager;
         }
+
+        public IFormatManager FormatManager { get; private set; }
 
         public override string Description
         {
@@ -28,10 +30,10 @@ namespace MD.Net
 
         public override void Prepare(IToolManager toolManager, IStatus status)
         {
-            var formatManager = new FormatManager(toolManager);
+            this.FormatManager.Validate(this.UpdatedTrack.Location);
             if (this.UpdatedTrack is Track track)
             {
-                track.Location = formatManager.Convert(this.UpdatedTrack.Location, this.UpdatedTrack.Compression, status);
+                track.Location = this.FormatManager.Convert(this.UpdatedTrack.Location, this.UpdatedTrack.Compression, status);
             }
             else
             {

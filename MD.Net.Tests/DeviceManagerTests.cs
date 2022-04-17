@@ -9,7 +9,7 @@ namespace MD.Net.Tests
     public class DeviceManagerTests
     {
         [TestCase("no netmd device")]
-        [TestCase("error")]
+        [TestCase("netmd_poll failed")]
         [TestCase("")]
         public void NoDevices(string output)
         {

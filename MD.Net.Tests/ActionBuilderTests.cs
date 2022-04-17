@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Rhino.Mocks;
 using System;
 using System.Linq;
 
@@ -10,7 +11,8 @@ namespace MD.Net.Tests
         [TestCase("Original Title", "New Title")]
         public void UpdateDiscTitle(string currentTitle, string updatedTitle)
         {
-            var discActionBuilder = new ActionBuilder();
+            var formatManager = MockRepository.GenerateStub<IFormatManager>();
+            var discActionBuilder = new ActionBuilder(formatManager);
             var device = default(IDevice);
             var currentDisc = new Disc(currentTitle, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, Tracks.None);
             var updatedDisc = new Disc(currentDisc)
@@ -26,7 +28,8 @@ namespace MD.Net.Tests
         [TestCase("Original Name", "New Name")]
         public void UpdateTrackName(string currentName, string updatedName)
         {
-            var discActionBuilder = new ActionBuilder();
+            var formatManager = MockRepository.GenerateStub<IFormatManager>();
+            var discActionBuilder = new ActionBuilder(formatManager);
             var device = default(IDevice);
             var track1 = new Track(0, Protection.None, Compression.None, TimeSpan.Zero, string.Empty);
             var track2 = new Track(1, Protection.None, Compression.None, TimeSpan.Zero, currentName);
@@ -45,7 +48,8 @@ namespace MD.Net.Tests
         [TestCase(@"C:\My Music\Test.wav", Compression.None, "This is a test.")]
         public void AddTrack(string location, Compression compression, string name)
         {
-            var discActionBuilder = new ActionBuilder();
+            var formatManager = MockRepository.GenerateStub<IFormatManager>();
+            var discActionBuilder = new ActionBuilder(formatManager);
             var device = default(IDevice);
             var track1 = new Track(0, Protection.None, Compression.None, TimeSpan.Zero, string.Empty);
             var track2 = new Track(1, Protection.None, Compression.None, TimeSpan.Zero, string.Empty);
@@ -64,7 +68,8 @@ namespace MD.Net.Tests
         [Test]
         public void RemoveTrack()
         {
-            var discActionBuilder = new ActionBuilder();
+            var formatManager = MockRepository.GenerateStub<IFormatManager>();
+            var discActionBuilder = new ActionBuilder(formatManager);
             var device = default(IDevice);
             var track1 = new Track(0, Protection.None, Compression.None, TimeSpan.Zero, string.Empty);
             var track2 = new Track(1, Protection.None, Compression.None, TimeSpan.Zero, string.Empty);
