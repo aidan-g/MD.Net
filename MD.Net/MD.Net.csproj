@@ -6,7 +6,7 @@
     <OutputPath>..\distribution\</OutputPath>
     <Version>0.0.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Platforms>x86;x64</Platforms>
+    <Platforms>AnyCPU</Platforms>
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
