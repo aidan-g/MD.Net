@@ -3,7 +3,6 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using System;
 using System.Diagnostics;
-using System.Linq;
 
 namespace MD.Net.Tests
 {
@@ -111,7 +110,7 @@ namespace MD.Net.Tests
             var formatManager = MockRepository.GenerateStub<IFormatManager>();
             formatManager.Expect(fm => fm.Convert(location, compression, status)).Return(location);
             var toolManager = MockRepository.GenerateStrictMock<IToolManager>();
-            toolManager.Expect(tm => tm.Start(Tools.NETMDCLI, string.Format("{0} \"{1}\" \"{2}\" {3}", Constants.NETMDCLI_SEND, location, name, Constants.NETMDCLI_VERBOSE))).Return(null);
+            toolManager.Expect(tm => tm.Start(Tools.NETMDCLI, string.Format("{0} {1} \"{2}\" \"{3}\"", Constants.NETMDCLI_VERBOSE, Constants.NETMDCLI_SEND, location, name))).Return(null);
             toolManager.Expect(tm => tm.Exec(Arg<Process>.Is.Anything, Arg<Action<string>>.Is.Anything, Arg<Action<string>>.Is.Anything)).Return(0);
             var device = new Device("Sony MDS-JE780/JB980");
             var track1 = new Track(0, Protection.None, Compression.None, TimeSpan.Zero, string.Empty);

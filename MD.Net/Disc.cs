@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace MD.Net
 {
@@ -28,13 +29,13 @@ namespace MD.Net
 
         public string Title { get; set; }
 
-        public TimeSpan RecordedTime { get; }
+        public TimeSpan RecordedTime { get; private set; }
 
-        public TimeSpan TotalTime { get; }
+        public TimeSpan TotalTime { get; private set; }
 
-        public TimeSpan AvailableTime { get; }
+        public TimeSpan AvailableTime { get; private set; }
 
-        public ITracks Tracks { get; }
+        public ITracks Tracks { get; private set; }
 
         public IDisc Clone()
         {
@@ -44,6 +45,11 @@ namespace MD.Net
                 tracks.IsUpdatable = true;
             }
             return disc;
+        }
+
+        public ICapacity GetCapacity()
+        {
+            return new Capacity(this);
         }
 
         public override int GetHashCode()

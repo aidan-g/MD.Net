@@ -8,8 +8,8 @@
             this.UpdatedTrack = updatedTrack;
         }
 
-        public ITrack CurrentTrack { get; }
+        public ITrack CurrentTrack { get; private set; }
 
-        public ITrack UpdatedTrack { get; }
+        public ITrack UpdatedTrack { get; private set; }
     }
 }

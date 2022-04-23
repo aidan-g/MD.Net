@@ -8,8 +8,8 @@
             this.UpdatedDisc = updatedDisc;
         }
 
-        public IDisc CurrentDisc { get; }
+        public IDisc CurrentDisc { get; private set; }
 
-        public IDisc UpdatedDisc { get; }
+        public IDisc UpdatedDisc { get; private set; }
     }
 }

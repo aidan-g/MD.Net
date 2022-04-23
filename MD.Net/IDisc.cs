@@ -17,5 +17,7 @@ namespace MD.Net
         ITracks Tracks { get; }
 
         IDisc Clone();
+
+        ICapacity GetCapacity();
     }
 }

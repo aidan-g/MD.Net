@@ -16,7 +16,7 @@ namespace MD.Net.Tests
                 Location = location
             };
             var toolManager = MockRepository.GenerateStrictMock<IToolManager>();
-            toolManager.Expect(tm => tm.Start(Tools.NETMDCLI, string.Format("{0} \"{1}\" {2}", Constants.NETMDCLI_SEND, track.Location, Constants.NETMDCLI_VERBOSE)));
+            toolManager.Expect(tm => tm.Start(Tools.NETMDCLI, string.Format("{0} {1} \"{2}\"", Constants.NETMDCLI_VERBOSE, Constants.NETMDCLI_SEND, track.Location)));
             toolManager.Expect(tm => tm.Exec(Arg<Process>.Is.Anything, Arg<Action<string>>.Is.Anything, Arg<Action<string>>.Is.Anything)).WhenCalled(invocation =>
             {
                 Utility.EmitLines(Resources.Send_SP, invocation.Arguments[1] as Action<string>);

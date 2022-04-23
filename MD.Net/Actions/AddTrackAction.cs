@@ -46,11 +46,11 @@ namespace MD.Net
             var process = default(Process);
             if (!string.IsNullOrEmpty(this.UpdatedTrack.Name))
             {
-                process = toolManager.Start(Tools.NETMDCLI, string.Format("{0} \"{1}\" \"{2}\" {3}", Constants.NETMDCLI_SEND, this.UpdatedTrack.Location, this.UpdatedTrack.Name, Constants.NETMDCLI_VERBOSE));
+                process = toolManager.Start(Tools.NETMDCLI, string.Format("{0} {1} \"{2}\" \"{3}\"", Constants.NETMDCLI_VERBOSE, Constants.NETMDCLI_SEND, this.UpdatedTrack.Location, this.UpdatedTrack.Name));
             }
             else
             {
-                process = toolManager.Start(Tools.NETMDCLI, string.Format("{0} \"{1}\" {2}", Constants.NETMDCLI_SEND, this.UpdatedTrack.Location, Constants.NETMDCLI_VERBOSE));
+                process = toolManager.Start(Tools.NETMDCLI, string.Format("{0} {1} \"{2}\"", Constants.NETMDCLI_VERBOSE, Constants.NETMDCLI_SEND, this.UpdatedTrack.Location));
             }
             using (var emitter = new DefaultStatusEmitter(this.Description, StatusType.Transfer, NETMDCLI_PROGRESS, status))
             {

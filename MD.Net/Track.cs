@@ -32,7 +32,7 @@ namespace MD.Net
 
         public Compression Compression { get; set; }
 
-        public TimeSpan Time { get; }
+        public TimeSpan Time { get; private set; }
 
         public string Name { get; set; }
 
