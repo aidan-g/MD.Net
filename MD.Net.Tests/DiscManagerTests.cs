@@ -13,10 +13,11 @@ namespace MD.Net.Tests
         [Test]
         public void NoDisk()
         {
+            var formatValidator = MockRepository.GenerateStub<IFormatValidator>();
             var toolManager = MockRepository.GenerateStub<IToolManager>();
             toolManager.Expect(tm => tm.Start(Tools.NETMDCLI)).Return(null);
             toolManager.Expect(tm => tm.Exec(Arg<Process>.Is.Anything, out Arg<string>.Out(Resources.Sony_MDS_JE780___No_Disk).Dummy, out Arg<string>.Out(string.Empty).Dummy)).Return(0);
-            var discManager = new DiscManager(toolManager);
+            var discManager = new DiscManager(toolManager, formatValidator);
             var device = new Device("Sony MDS-JE780/JB980");
             var disc = discManager.GetDisc(device);
             Assert.IsNotNull(disc);
@@ -29,10 +30,11 @@ namespace MD.Net.Tests
         [Test]
         public void Evanescence()
         {
+            var formatValidator = MockRepository.GenerateStub<IFormatValidator>();
             var toolManager = MockRepository.GenerateStub<IToolManager>();
             toolManager.Expect(tm => tm.Start(Tools.NETMDCLI)).Return(null);
             toolManager.Expect(tm => tm.Exec(Arg<Process>.Is.Anything, out Arg<string>.Out(Resources.Sony_MDS_JE780___Evanescence).Dummy, out Arg<string>.Out(string.Empty).Dummy)).Return(0);
-            var discManager = new DiscManager(toolManager);
+            var discManager = new DiscManager(toolManager, formatValidator);
             var device = new Device("Sony MDS-JE780/JB980");
             var disc = discManager.GetDisc(device);
             Assert.IsNotNull(disc);
@@ -46,6 +48,8 @@ namespace MD.Net.Tests
         [TestCase("Original Title", "New Title")]
         public void UpdateDiscTitle(string currentTitle, string updatedTitle)
         {
+            var status = Status.Ignore;
+            var formatValidator = MockRepository.GenerateStub<IFormatValidator>();
             var toolManager = MockRepository.GenerateStrictMock<IToolManager>();
             toolManager.Expect(tm => tm.Start(Tools.NETMDCLI, string.Format("{0} \"{1}\"", Constants.NETMDCLI_SETTITLE, updatedTitle))).Return(null);
             toolManager.Expect(tm => tm.Exec(Arg<Process>.Is.Anything, out Arg<string>.Out(string.Empty).Dummy, out Arg<string>.Out(string.Empty).Dummy)).Return(0);
@@ -64,14 +68,16 @@ namespace MD.Net.Tests
                     new UpdateDiscTitleAction(device,currentDisc,updatedDisc)
                 }
             );
-            var discManager = new DiscManager(toolManager);
-            var result = discManager.ApplyActions(device, actions, Status.Ignore, false);
+            var discManager = new DiscManager(toolManager, formatValidator);
+            var result = discManager.ApplyActions(device, actions, status, false);
             Assert.AreEqual(ResultStatus.Success, result.Status);
         }
 
         [TestCase("Original Name", "New Name")]
         public void UpdateTrackName(string currentName, string updatedName)
         {
+            var status = Status.Ignore;
+            var formatValidator = MockRepository.GenerateStub<IFormatValidator>();
             var toolManager = MockRepository.GenerateStrictMock<IToolManager>();
             toolManager.Expect(tm => tm.Start(Tools.NETMDCLI, string.Format("{0} {1} {2}", Constants.NETMDCLI_RENAME, 1, updatedName))).Return(null);
             toolManager.Expect(tm => tm.Exec(Arg<Process>.Is.Anything, out Arg<string>.Out(string.Empty).Dummy, out Arg<string>.Out(string.Empty).Dummy)).Return(0);
@@ -79,7 +85,7 @@ namespace MD.Net.Tests
             var track1 = new Track(0, Protection.None, Compression.None, TimeSpan.Zero, string.Empty);
             var track2 = new Track(1, Protection.None, Compression.None, TimeSpan.Zero, currentName);
             var track3 = new Track(2, Protection.None, Compression.None, TimeSpan.Zero, string.Empty);
-            var currentDisc = new Disc(string.Empty, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, new Tracks(new[] { track1, track2, track3 }));
+            var currentDisc = new Disc(string.Empty, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, new Tracks(formatValidator, new[] { track1, track2, track3 }));
             var updatedDisc = new Disc(currentDisc);
             updatedDisc.Tracks[1].Name = updatedName;
             var actions = new Actions(
@@ -91,17 +97,18 @@ namespace MD.Net.Tests
                     new UpdateTrackNameAction(device, currentDisc, updatedDisc, currentDisc.Tracks[1], updatedDisc.Tracks[1])
                 }
             );
-            var discManager = new DiscManager(toolManager);
-            var result = discManager.ApplyActions(device, actions, Status.Ignore, false);
+            var discManager = new DiscManager(toolManager, formatValidator);
+            var result = discManager.ApplyActions(device, actions, status, false);
             Assert.AreEqual(ResultStatus.Success, result.Status);
         }
 
-        [TestCase(@"C:\My Music\Test.wav", Compression.None, "This is a test.")]
-        public void AddTrack(string location, Compression compression, string name)
+        [TestCase(@"C:\My Music\Test.wav", Compression.None, "00:03:30", "This is a test.")]
+        public void AddTrack(string location, Compression compression, TimeSpan time, string name)
         {
             var status = Status.Ignore;
+            var formatValidator = MockRepository.GenerateStub<IFormatValidator>();
+            formatValidator.Expect(fm => fm.Validate(Arg<string>.Is.Equal(location), out Arg<TimeSpan>.Out(time).Dummy));
             var formatManager = MockRepository.GenerateStub<IFormatManager>();
-            formatManager.Expect(fm => fm.Validate(location));
             formatManager.Expect(fm => fm.Convert(location, compression, status)).Return(location);
             var toolManager = MockRepository.GenerateStrictMock<IToolManager>();
             toolManager.Expect(tm => tm.Start(Tools.NETMDCLI, string.Format("{0} \"{1}\" \"{2}\" {3}", Constants.NETMDCLI_SEND, location, name, Constants.NETMDCLI_VERBOSE))).Return(null);
@@ -110,9 +117,10 @@ namespace MD.Net.Tests
             var track1 = new Track(0, Protection.None, Compression.None, TimeSpan.Zero, string.Empty);
             var track2 = new Track(1, Protection.None, Compression.None, TimeSpan.Zero, string.Empty);
             var track3 = new Track(2, Protection.None, Compression.None, TimeSpan.Zero, string.Empty);
-            var currentDisc = new Disc(string.Empty, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, new Tracks(new[] { track1, track2, track3 }));
+            var currentDisc = new Disc(string.Empty, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, new Tracks(formatValidator, new[] { track1, track2, track3 }));
             var updatedDisc = new Disc(currentDisc);
             var track = updatedDisc.Tracks.Add(location, compression);
+            Assert.AreEqual(time, track.Time);
             track.Name = name;
             var actions = new Actions(
                 device,
@@ -123,7 +131,7 @@ namespace MD.Net.Tests
                     new AddTrackAction(formatManager, device, currentDisc, updatedDisc, track)
                 }
             );
-            var discManager = new DiscManager(toolManager);
+            var discManager = new DiscManager(toolManager, formatValidator);
             var result = discManager.ApplyActions(device, actions, status, false);
             Assert.AreEqual(ResultStatus.Success, result.Status);
         }
@@ -131,6 +139,8 @@ namespace MD.Net.Tests
         [Test]
         public void RemoveTrack()
         {
+            var status = Status.Ignore;
+            var formatValidator = MockRepository.GenerateStub<IFormatValidator>();
             var toolManager = MockRepository.GenerateStrictMock<IToolManager>();
             toolManager.Expect(tm => tm.Start(Tools.NETMDCLI, string.Format("{0} {1}", Constants.NETMDCLI_DELETE, 1))).Return(null);
             toolManager.Expect(tm => tm.Exec(Arg<Process>.Is.Anything, out Arg<string>.Out(string.Empty).Dummy, out Arg<string>.Out(string.Empty).Dummy)).Return(0);
@@ -138,7 +148,7 @@ namespace MD.Net.Tests
             var track1 = new Track(0, Protection.None, Compression.None, TimeSpan.Zero, string.Empty);
             var track2 = new Track(1, Protection.None, Compression.None, TimeSpan.Zero, string.Empty);
             var track3 = new Track(2, Protection.None, Compression.None, TimeSpan.Zero, string.Empty);
-            var currentDisc = new Disc(string.Empty, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, new Tracks(new[] { track1, track2, track3 }));
+            var currentDisc = new Disc(string.Empty, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, new Tracks(formatValidator, new[] { track1, track2, track3 }));
             var updatedDisc = new Disc(currentDisc);
             var track = updatedDisc.Tracks[1];
             updatedDisc.Tracks.Remove(track);
@@ -151,8 +161,8 @@ namespace MD.Net.Tests
                     new RemoveTrackAction(device, currentDisc, updatedDisc, track)
                 }
             );
-            var discManager = new DiscManager(toolManager);
-            var result = discManager.ApplyActions(device, actions, Status.Ignore, false);
+            var discManager = new DiscManager(toolManager, formatValidator);
+            var result = discManager.ApplyActions(device, actions, status, false);
             Assert.AreEqual(ResultStatus.Success, result.Status);
         }
 
@@ -160,10 +170,12 @@ namespace MD.Net.Tests
         [TestCase("\"name\":\"What You Want - Evanescence\"", "\"name\":\"Other\"")]
         public void Error_DiscWasModified(string oldValue, string newValue)
         {
+            var status = Status.Ignore;
+            var formatValidator = MockRepository.GenerateStub<IFormatValidator>();
             var toolManager = MockRepository.GenerateStrictMock<IToolManager>();
             toolManager.Expect(tm => tm.Start(Tools.NETMDCLI)).Return(null).Repeat.Once();
             toolManager.Expect(tm => tm.Exec(Arg<Process>.Is.Anything, out Arg<string>.Out(Resources.Sony_MDS_JE780___Evanescence).Dummy, out Arg<string>.Out(string.Empty).Dummy)).Return(0).Repeat.Once();
-            var discManager = new DiscManager(toolManager);
+            var discManager = new DiscManager(toolManager, formatValidator);
             var device = new Device("Sony MDS-JE780/JB980");
             var disc = discManager.GetDisc(device);
             toolManager.Expect(tm => tm.Start(Tools.NETMDCLI)).Return(null).Repeat.Once();
@@ -174,7 +186,7 @@ namespace MD.Net.Tests
                 Disc.None,
                 Actions.None
             );
-            var result = discManager.ApplyActions(device, actions, Status.Ignore, true);
+            var result = discManager.ApplyActions(device, actions, status, true);
             Assert.AreEqual(ResultStatus.Failure, result.Status);
             Assert.AreEqual(Strings.Error_UnexpectedDisc, result.Message);
         }

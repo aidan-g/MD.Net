@@ -30,7 +30,6 @@ namespace MD.Net
 
         public override void Prepare(IToolManager toolManager, IStatus status)
         {
-            this.FormatManager.Validate(this.UpdatedTrack.Location);
             if (this.UpdatedTrack is Track track)
             {
                 track.Location = this.FormatManager.Convert(this.UpdatedTrack.Location, this.UpdatedTrack.Compression, status);

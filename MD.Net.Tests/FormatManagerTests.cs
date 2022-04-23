@@ -15,7 +15,9 @@ namespace MD.Net.Tests
         [Explicit]
         public void Convert(Compression compression, int format, int channelCount, int sampleRate, int bitsPerSample, int blockAlign, int byteRate)
         {
+            var status = Status.Ignore;
             var toolManager = new ToolManager();
+            var formatValidator = new FormatValidator();
             var formatManager = new FormatManager(toolManager);
             foreach (var name in new[] { "Track_001", "Track_002", "Track_003" })
             {
@@ -27,8 +29,9 @@ namespace MD.Net.Tests
                         reader.CopyTo(writer);
                     }
                 }
-                formatManager.Validate(inputFileName);
-                var outputFileName = formatManager.Convert(inputFileName, compression, Status.Ignore);
+                var length = default(TimeSpan);
+                formatValidator.Validate(inputFileName, out length);
+                var outputFileName = formatManager.Convert(inputFileName, compression, status);
                 var info = default(WavHeader.WavInfo);
                 using (var reader = File.OpenRead(outputFileName))
                 {
@@ -70,12 +73,13 @@ namespace MD.Net.Tests
         [Explicit]
         public void Error_Unsupported()
         {
+            var status = Status.Ignore;
             var toolManager = new ToolManager();
             var formatManager = new FormatManager(toolManager);
             var inputFileName = Path.GetTempFileName();
             try
             {
-                var outputFileName = formatManager.Convert(inputFileName, Compression.LP2, Status.Ignore);
+                var outputFileName = formatManager.Convert(inputFileName, Compression.LP2, status);
                 Assert.Fail();
             }
             catch (ToolException e)

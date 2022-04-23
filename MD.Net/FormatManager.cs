@@ -24,39 +24,6 @@ namespace MD.Net
 
         public IToolManager ToolManager { get; private set; }
 
-        public void Validate(string fileName)
-        {
-            if (!this.IsValid(fileName))
-            {
-                throw new WaveFormatException(fileName);
-            }
-        }
-
-        protected virtual bool IsValid(string fileName)
-        {
-            using (var reader = File.OpenRead(fileName))
-            {
-                var info = default(WavHeader.WavInfo);
-                if (!WavHeader.Read(reader, out info))
-                {
-                    return false;
-                }
-                if (info.SampleRate != 44100)
-                {
-                    return false;
-                }
-                if (info.BitsPerSample != 16)
-                {
-                    return false;
-                }
-                if (info.ChannelCount != 2)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
         public string Convert(string fileName, Compression compression, IStatus status)
         {
             switch (compression)
@@ -98,36 +65,25 @@ namespace MD.Net
                 if (OMAHeader.Read(reader, out omaInfo))
                 {
                     var wavInfo = default(WavHeader.WavInfo);
-                    wavInfo.FileSize = WavHeader.GetFileSize(reader, wavInfo);
+                    wavInfo.FileSize = global::System.Convert.ToInt32(reader.Length - reader.Position) + (WavHeader.GetHeaderSize(wavInfo) - WavHeader.WAV_HEADER_OFFSET);
                     wavInfo.Format = WavHeader.WAV_FORMAT_ATRAC3;
                     wavInfo.ChannelCount = 2;
                     wavInfo.SampleRate = omaInfo.SampleRate;
                     wavInfo.ByteRate = OMAHeader.GetBitRate(omaInfo) / 8;
                     wavInfo.BlockAlign = omaInfo.Framesize;
                     wavInfo.BitsPerSample = 0;
+                    wavInfo.DataSize = global::System.Convert.ToInt32(reader.Length - reader.Position);
                     using (var writer = File.Create(result))
                     {
-                        WavHeader.Write(writer, wavInfo);
+                        if (!WavHeader.Write(writer, wavInfo))
+                        {
+                            throw new InvalidOperationException("Failed to construct WAV header.");
+                        }
                         reader.CopyTo(writer);
                     }
                 }
             }
             return result;
-        }
-    }
-
-    public class WaveFormatException : Exception
-    {
-        public WaveFormatException(string fileName) : base(GetMessage(fileName))
-        {
-            this.FileName = fileName;
-        }
-
-        public string FileName { get; private set; }
-
-        private static string GetMessage(string fileName)
-        {
-            return string.Format(Strings.WaveFormatException_Message, fileName);
         }
     }
 }

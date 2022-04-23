@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using System.IO;
-using System.Linq;
 
 namespace MD.Net.Tests
 {
@@ -53,7 +52,7 @@ namespace MD.Net.Tests
                 Assert.IsTrue(result);
                 var expected = Resources.OMA_ATRAC_LP2;
                 var actual = writer.ToArray();
-                Assert.IsTrue(Enumerable.SequenceEqual(expected, actual));
+                expected.AssertSequenceEqual(actual);
             }
         }
 
@@ -71,7 +70,7 @@ namespace MD.Net.Tests
                 Assert.IsTrue(result);
                 var expected = Resources.OMA_ATRAC_LP4;
                 var actual = writer.ToArray();
-                Assert.IsTrue(Enumerable.SequenceEqual(expected, actual));
+                expected.AssertSequenceEqual(actual);
             }
         }
     }

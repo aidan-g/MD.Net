@@ -28,9 +28,10 @@ namespace MD.Net.Tests
         public void Test001()
         {
             var toolManager = new ToolManager();
+            var formatValidator = new FormatValidator();
             var formatManager = new FormatManager(toolManager);
             var deviceManager = new DeviceManager(toolManager);
-            var discManager = new DiscManager(toolManager);
+            var discManager = new DiscManager(toolManager, formatValidator);
 
             var device = deviceManager.GetDevices().SingleOrDefault();
             var currentDisc = discManager.GetDisc(device);
@@ -59,9 +60,10 @@ namespace MD.Net.Tests
         public void Test002(Compression compression)
         {
             var toolManager = new ToolManager();
+            var formatValidator = new FormatValidator();
             var formatManager = new FormatManager(toolManager);
             var deviceManager = new DeviceManager(toolManager);
-            var discManager = new DiscManager(toolManager);
+            var discManager = new DiscManager(toolManager, formatValidator);
 
             var device = deviceManager.GetDevices().SingleOrDefault();
             var currentDisc = discManager.GetDisc(device);

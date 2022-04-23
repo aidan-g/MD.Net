@@ -27,7 +27,6 @@ namespace MD.Net.Tests
                 status.Expect(s => s.Update(Arg<string>.Is.Anything, Arg<int>.Is.Equal(a), Arg<int>.Is.Equal(100), Arg<StatusType>.Is.Equal(StatusType.Transfer))).Repeat.Once();
             }
             var formatManager = MockRepository.GenerateStub<IFormatManager>();
-            formatManager.Expect(fm => fm.Validate(location));
             formatManager.Expect(fm => fm.Convert(location, compression, status)).Return(location);
             var action = new AddTrackAction(formatManager, Device.None, Disc.None, Disc.None, track);
             action.Prepare(toolManager, status);

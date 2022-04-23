@@ -12,10 +12,13 @@ namespace MD.Net
             this.Store = new List<ITrack>();
         }
 
-        public Tracks(IEnumerable<ITrack> tracks)
+        public Tracks(IFormatValidator formatValidator, IEnumerable<ITrack> tracks)
         {
+            this.FormatValidator = formatValidator;
             this.Store = tracks.ToList();
         }
+
+        public IFormatValidator FormatValidator { get; private set; }
 
         public IList<ITrack> Store { get; private set; }
 
@@ -40,12 +43,14 @@ namespace MD.Net
         public ITrack Add(string location, Compression compression)
         {
             var position = 0;
+            var time = default(TimeSpan);
+            this.FormatValidator.Validate(location, out time);
             if (this.Store.Any())
             {
                 position = this.Store.Max(track => track.Position) + 1;
             }
             {
-                var track = new Track(position, Protection.None, compression, TimeSpan.Zero, string.Empty)
+                var track = new Track(position, Protection.None, compression, time, string.Empty)
                 {
                     Location = location
                 };
@@ -71,7 +76,7 @@ namespace MD.Net
 
         public ITracks Clone()
         {
-            return new Tracks(this.Store.Select(track => track.Clone()));
+            return new Tracks(this.FormatValidator, this.Store.Select(track => track.Clone()));
         }
 
         public IEnumerator<ITrack> GetEnumerator()

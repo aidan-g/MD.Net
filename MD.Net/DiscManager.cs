@@ -9,12 +9,15 @@ namespace MD.Net
 {
     public class DiscManager : IDiscManager
     {
-        public DiscManager(IToolManager toolManager)
+        public DiscManager(IToolManager toolManager, IFormatValidator formatValidator)
         {
             this.ToolManager = toolManager;
+            this.FormatValidator = formatValidator;
         }
 
         public IToolManager ToolManager { get; private set; }
+
+        public IFormatValidator FormatValidator { get; private set; }
 
         public IDisc GetDisc(IDevice device)
         {
@@ -45,7 +48,7 @@ namespace MD.Net
                 Utility.GetTimeSpan(disc.recordedTime),
                 Utility.GetTimeSpan(disc.totalTime),
                 Utility.GetTimeSpan(disc.availableTime),
-                new Tracks(this.GetTracks(disc.tracks))
+                new Tracks(this.FormatValidator, this.GetTracks(disc.tracks))
             );
         }
 

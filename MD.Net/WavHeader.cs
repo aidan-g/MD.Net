@@ -161,21 +161,8 @@ namespace MD.Net
                 }
             }
             writer.Write(Encoding.ASCII.GetBytes(WAV_CHUNK_DATA));
-            if (info.DataSize == 0)
-            {
-                //If the data size was not specified, calculate it.
-                info.DataSize = GetDataSize(info);
-            }
             writer.Write(Utility.LEWord32(info.DataSize));
             return true;
-        }
-
-        public static int GetFileSize(Stream stream, WavInfo info)
-        {
-            var fileSize = Convert.ToInt32(
-                ((stream.Length - stream.Position) + GetHeaderSize(info)) - WAV_HEADER_OFFSET
-            );
-            return fileSize;
         }
 
         public static int GetHeaderSize(WavInfo info)
@@ -199,10 +186,9 @@ namespace MD.Net
             return headerSize;
         }
 
-        public static int GetDataSize(WavInfo info)
+        public static int GetBitRate(WavInfo info)
         {
-            var dataSize = info.FileSize - (GetHeaderSize(info) - WAV_HEADER_OFFSET);
-            return dataSize;
+            return info.SampleRate * info.ChannelCount * info.BitsPerSample;
         }
 
         public struct WavInfo

@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using System.IO;
-using System.Linq;
 
 namespace MD.Net.Tests
 {
@@ -41,12 +40,12 @@ namespace MD.Net.Tests
                 Assert.AreEqual(384, info.BlockAlign);
                 Assert.AreEqual(0, info.BitsPerSample);
                 Assert.AreEqual(5039616, info.DataSize);
-                Assert.IsTrue(Enumerable.SequenceEqual(new byte[] { 14, 0, 1, 0, 68, 172, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, info.Data));
+                new byte[] { 14, 0, 1, 0, 68, 172, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }.AssertSequenceEqual(info.Data);
                 Assert.AreEqual(2, info.Chunks.Length);
                 Assert.AreEqual("fact", info.Chunks[0].Name);
-                Assert.IsTrue(Enumerable.SequenceEqual(new byte[] { 150, 17, 205, 0 }, info.Chunks[0].Data));
+                new byte[] { 150, 17, 205, 0 }.AssertSequenceEqual(info.Chunks[0].Data);
                 Assert.AreEqual("LIST", info.Chunks[1].Name);
-                Assert.IsTrue(Enumerable.SequenceEqual(new byte[] { 73, 78, 70, 79, 73, 83, 70, 84, 14, 0, 0, 0, 76, 97, 118, 102, 53, 57, 46, 49, 54, 46, 49, 48, 48, 0 }, info.Chunks[1].Data));
+                new byte[] { 73, 78, 70, 79, 73, 83, 70, 84, 14, 0, 0, 0, 76, 97, 118, 102, 53, 57, 46, 49, 54, 46, 49, 48, 48, 0 }.AssertSequenceEqual(info.Chunks[1].Data);
             }
         }
 
@@ -66,12 +65,34 @@ namespace MD.Net.Tests
                 Assert.AreEqual(192, info.BlockAlign);
                 Assert.AreEqual(0, info.BitsPerSample);
                 Assert.AreEqual(2519808, info.DataSize);
-                Assert.IsTrue(Enumerable.SequenceEqual(new byte[] { 14, 0, 1, 0, 68, 172, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0 }, info.Data));
+                new byte[] { 14, 0, 1, 0, 68, 172, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0 }.AssertSequenceEqual(info.Data);
                 Assert.AreEqual(2, info.Chunks.Length);
                 Assert.AreEqual("fact", info.Chunks[0].Name);
-                Assert.IsTrue(Enumerable.SequenceEqual(new byte[] { 195, 20, 205, 0 }, info.Chunks[0].Data));
+                new byte[] { 195, 20, 205, 0 }.AssertSequenceEqual(info.Chunks[0].Data);
                 Assert.AreEqual("LIST", info.Chunks[1].Name);
-                Assert.IsTrue(Enumerable.SequenceEqual(new byte[] { 73, 78, 70, 79, 73, 83, 70, 84, 14, 0, 0, 0, 76, 97, 118, 102, 53, 57, 46, 49, 54, 46, 49, 48, 48, 0 }, info.Chunks[1].Data));
+                new byte[] { 73, 78, 70, 79, 73, 83, 70, 84, 14, 0, 0, 0, 76, 97, 118, 102, 53, 57, 46, 49, 54, 46, 49, 48, 48, 0 }.AssertSequenceEqual(info.Chunks[1].Data);
+            }
+        }
+
+        [Test]
+        public void Write_WAV()
+        {
+            var info = default(WavHeader.WavInfo);
+            info.FileSize = 53785552;
+            info.Format = WavHeader.WAV_FORMAT_PCM;
+            info.ChannelCount = 2;
+            info.SampleRate = 44100;
+            info.ByteRate = 176400;
+            info.BlockAlign = 4;
+            info.BitsPerSample = 16;
+            info.DataSize = 53745552;
+            using (var writer = new MemoryStream())
+            {
+                var result = WavHeader.Write(writer, info);
+                Assert.IsTrue(result);
+                var expected = Resources.Track_001.Read(44);
+                var actual = writer.ToArray();
+                expected.AssertSequenceEqual(actual);
             }
         }
 
@@ -87,6 +108,7 @@ namespace MD.Net.Tests
             info.BlockAlign = 384;
             info.BitsPerSample = 0;
             info.Data = new byte[] { 14, 0, 1, 0, 68, 172, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 };
+            info.DataSize = 5039616;
             info.Chunks = new[]
             {
                 new WavHeader.WaveChunk()
@@ -106,7 +128,7 @@ namespace MD.Net.Tests
                 Assert.IsTrue(result);
                 var expected = Resources.WAV_ATRAC3_LP2;
                 var actual = writer.ToArray();
-                Assert.IsTrue(Enumerable.SequenceEqual(expected, actual));
+                expected.AssertSequenceEqual(actual);
             }
         }
 
@@ -122,6 +144,7 @@ namespace MD.Net.Tests
             info.BlockAlign = 192;
             info.BitsPerSample = 0;
             info.Data = new byte[] { 14, 0, 1, 0, 68, 172, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0 };
+            info.DataSize = 2519808;
             info.Chunks = new[]
             {
                 new WavHeader.WaveChunk()
@@ -141,7 +164,7 @@ namespace MD.Net.Tests
                 Assert.IsTrue(result);
                 var expected = Resources.WAV_ATRAC3_LP4;
                 var actual = writer.ToArray();
-                Assert.IsTrue(Enumerable.SequenceEqual(expected, actual));
+                expected.AssertSequenceEqual(actual);
             }
         }
     }
