@@ -42,6 +42,9 @@ namespace MD.Net.Tests
             Assert.AreEqual(new TimeSpan(0, 1, 14, 59, 487), disc.TotalTime);
             Assert.AreEqual(new TimeSpan(0, 0, 27, 26, 951), disc.AvailableTime);
             Assert.AreEqual(12, disc.Tracks.Count);
+            var capacity = disc.GetCapacity();
+            Assert.AreEqual(63, capacity.PercentUsed);
+            Assert.AreEqual(37, capacity.PercentFree);
         }
 
         [TestCase("Original Title", "New Title")]
