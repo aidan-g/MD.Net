@@ -45,10 +45,10 @@ namespace MD.Net
             switch (track.Compression)
             {
                 case Compression.LP2:
-                    time /= (LP2_RATE / SP_RATE);
+                    time /= ((double)SP_RATE / LP2_RATE);
                     break;
                 case Compression.LP4:
-                    time /= (LP4_RATE / SP_RATE);
+                    time /= ((double)SP_RATE / LP4_RATE);
                     break;
             }
             return time;

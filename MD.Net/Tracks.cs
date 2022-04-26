@@ -44,7 +44,10 @@ namespace MD.Net
         {
             var position = 0;
             var time = default(TimeSpan);
-            this.FormatValidator.Validate(location, out time);
+            if (this.FormatValidator != null)
+            {
+                this.FormatValidator.Validate(location, out time);
+            }
             if (this.Store.Any())
             {
                 position = this.Store.Max(track => track.Position) + 1;
