@@ -185,6 +185,24 @@ namespace MD.Net.Tests {
         /// <summary>
         ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
         /// </summary>
+        internal static System.IO.UnmanagedMemoryStream Track_001_LP2_at3 {
+            get {
+                return ResourceManager.GetStream("Track_001_LP2_at3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream Track_001_LP4_at3 {
+            get {
+                return ResourceManager.GetStream("Track_001_LP4_at3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
         internal static System.IO.UnmanagedMemoryStream Track_002 {
             get {
                 return ResourceManager.GetStream("Track_002", resourceCulture);
@@ -194,9 +212,45 @@ namespace MD.Net.Tests {
         /// <summary>
         ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
         /// </summary>
+        internal static System.IO.UnmanagedMemoryStream Track_002_LP2_at3 {
+            get {
+                return ResourceManager.GetStream("Track_002_LP2_at3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream Track_002_LP4_at3 {
+            get {
+                return ResourceManager.GetStream("Track_002_LP4_at3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
         internal static System.IO.UnmanagedMemoryStream Track_003 {
             get {
                 return ResourceManager.GetStream("Track_003", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream Track_003_LP2_at3 {
+            get {
+                return ResourceManager.GetStream("Track_003_LP2_at3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream Track_003_LP4_at3 {
+            get {
+                return ResourceManager.GetStream("Track_003_LP4_at3", resourceCulture);
             }
         }
         

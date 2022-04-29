@@ -148,6 +148,6 @@
     <value>Renaming track: {0}</value>
   </data>
   <data name="WaveFormatException.Message" xml:space="preserve">
-    <value>FIle "{0}" is unsupported. Expected WAVE 44.1kHz/16 bit/Stereo.</value>
+    <value>File "{0}" is unsupported. Expected WAVE/ATRAC 44.1kHz/16 bit/Stereo.</value>
   </data>
 </root>

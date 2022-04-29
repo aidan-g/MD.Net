@@ -151,7 +151,7 @@ namespace MD.Net.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to FIle &quot;{0}&quot; is unsupported. Expected WAVE 44.1kHz/16 bit/Stereo..
+        ///   Looks up a localized string similar to File &quot;{0}&quot; is unsupported. Expected WAVE/ATRAC 44.1kHz/16 bit/Stereo..
         /// </summary>
         internal static string WaveFormatException_Message {
             get {

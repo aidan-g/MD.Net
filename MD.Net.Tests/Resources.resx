@@ -142,11 +142,29 @@
   <data name="Track_001" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Track 001.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="Track_001_LP2_at3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\track_001_lp2.at3.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Track_001_LP4_at3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\track_001_lp4.at3.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="Track_002" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Track 002.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="Track_002_LP2_at3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\track_002_lp2.at3.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Track_002_LP4_at3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\track_002_lp4.at3.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="Track_003" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Track 003.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Track_003_LP2_at3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\track_003_lp2.at3.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Track_003_LP4_at3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\track_003_lp4.at3.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="WAV_ATRAC3_LP2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\wav_atrac3_lp2.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

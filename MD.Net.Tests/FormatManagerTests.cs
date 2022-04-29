@@ -9,43 +9,68 @@ namespace MD.Net.Tests
     [TestFixture]
     public class FormatManagerTests
     {
-        [TestCase(Compression.None, WavHeader.WAV_FORMAT_PCM, 2, 44100, 16, 4, 176400)]
-        [TestCase(Compression.LP2, WavHeader.WAV_FORMAT_ATRAC3, 2, 44100, 0, 384, 16537)]
-        [TestCase(Compression.LP4, WavHeader.WAV_FORMAT_ATRAC3, 2, 44100, 0, 192, 8268)]
+        public static readonly object[][] ConvertSource = new object[][]
+        {
+            //No conversion required.
+            new object[] { "Track_001", Compression.None, WavHeader.WAV_FORMAT_PCM, 2, 44100, 16, 4, 176400 },
+            new object[] { "Track_002", Compression.None, WavHeader.WAV_FORMAT_PCM, 2, 44100, 16, 4, 176400 },
+            new object[] { "Track_003", Compression.None, WavHeader.WAV_FORMAT_PCM, 2, 44100, 16, 4, 176400 },
+            //Supported conversions.
+            new object[] { "Track_001", Compression.LP2, WavHeader.WAV_FORMAT_ATRAC3, 2, 44100, 0, 384, 16537 },
+            new object[] { "Track_002", Compression.LP2, WavHeader.WAV_FORMAT_ATRAC3, 2, 44100, 0, 384, 16537 },
+            new object[] { "Track_003", Compression.LP2, WavHeader.WAV_FORMAT_ATRAC3, 2, 44100, 0, 384, 16537 },
+            new object[] { "Track_001", Compression.LP4, WavHeader.WAV_FORMAT_ATRAC3, 2, 44100, 0, 192, 8268 },
+            new object[] { "Track_002", Compression.LP4, WavHeader.WAV_FORMAT_ATRAC3, 2, 44100, 0, 192, 8268 },
+            new object[] { "Track_003", Compression.LP4, WavHeader.WAV_FORMAT_ATRAC3, 2, 44100, 0, 192, 8268 },
+            //No conversion required.
+            new object[] { "Track_001_LP2_at3", Compression.LP2, WavHeader.WAV_FORMAT_ATRAC3, 2, 44100, 0, 384, 16537 },
+            new object[] { "Track_002_LP2_at3", Compression.LP2, WavHeader.WAV_FORMAT_ATRAC3, 2, 44100, 0, 384, 16537 },
+            new object[] { "Track_003_LP2_at3", Compression.LP2, WavHeader.WAV_FORMAT_ATRAC3, 2, 44100, 0, 384, 16537 },
+            //No conversion required.
+            new object[] { "Track_001_LP4_at3", Compression.LP4, WavHeader.WAV_FORMAT_ATRAC3, 2, 44100, 0, 192, 8268 },
+            new object[] { "Track_002_LP4_at3", Compression.LP4, WavHeader.WAV_FORMAT_ATRAC3, 2, 44100, 0, 192, 8268 },
+            new object[] { "Track_003_LP4_at3", Compression.LP4, WavHeader.WAV_FORMAT_ATRAC3, 2, 44100, 0, 192, 8268 },
+        };
+
         [Explicit]
-        public void Convert(Compression compression, int format, int channelCount, int sampleRate, int bitsPerSample, int blockAlign, int byteRate)
+        [TestCaseSource("ConvertSource")]
+        public void Convert(string name, Compression compression, int format, int channelCount, int sampleRate, int bitsPerSample, int blockAlign, int byteRate)
         {
             var status = Status.Ignore;
             var toolManager = new ToolManager();
             var formatValidator = new FormatValidator();
             var formatManager = new FormatManager(toolManager);
-            foreach (var name in new[] { "Track_001", "Track_002", "Track_003" })
+            var inputFileName = Path.Combine(Path.GetTempPath(), name + ".wav");
+            using (var reader = Resources.ResourceManager.GetStream(name))
             {
-                var inputFileName = Path.Combine(Path.GetTempPath(), name + ".wav");
-                using (var reader = Resources.ResourceManager.GetStream(name))
+                using (var writer = File.Create(inputFileName))
                 {
-                    using (var writer = File.Create(inputFileName))
-                    {
-                        reader.CopyTo(writer);
-                    }
+                    reader.CopyTo(writer);
                 }
-                var length = default(TimeSpan);
-                formatValidator.Validate(inputFileName, out length);
-                var outputFileName = formatManager.Convert(inputFileName, compression, status);
-                var info = default(WavHeader.WavInfo);
-                using (var reader = File.OpenRead(outputFileName))
-                {
-                    Assert.IsTrue(WavHeader.Read(reader, out info));
-                    Assert.AreEqual(reader.Length - WavHeader.WAV_HEADER_OFFSET, info.FileSize);
-                    Assert.AreEqual(format, info.Format);
-                    Assert.AreEqual(channelCount, info.ChannelCount);
-                    Assert.AreEqual(sampleRate, info.SampleRate);
-                    Assert.AreEqual(bitsPerSample, info.BitsPerSample);
-                    Assert.AreEqual(blockAlign, info.BlockAlign);
-                    Assert.AreEqual(byteRate, info.ByteRate);
-                    Assert.AreEqual(reader.Length - reader.Position, info.DataSize);
-                }
+            }
+            var length = default(TimeSpan);
+            formatValidator.Validate(inputFileName, out length);
+            var outputFileName = formatManager.Convert(inputFileName, compression, status);
+            var info = default(WavHeader.WavInfo);
+            using (var reader = File.OpenRead(outputFileName))
+            {
+                Assert.IsTrue(WavHeader.Read(reader, out info));
+                Assert.AreEqual(reader.Length - WavHeader.WAV_HEADER_OFFSET, info.FileSize);
+                Assert.AreEqual(format, info.Format);
+                Assert.AreEqual(channelCount, info.ChannelCount);
+                Assert.AreEqual(sampleRate, info.SampleRate);
+                Assert.AreEqual(bitsPerSample, info.BitsPerSample);
+                Assert.AreEqual(blockAlign, info.BlockAlign);
+                Assert.AreEqual(byteRate, info.ByteRate);
+                Assert.AreEqual(reader.Length - reader.Position, info.DataSize);
+            }
+            if (File.Exists(inputFileName))
+            {
                 File.Delete(inputFileName);
+            }
+            if (File.Exists(outputFileName))
+            {
+                File.Delete(outputFileName);
             }
         }
 
@@ -70,11 +95,10 @@ namespace MD.Net.Tests
         }
 
         [Test]
-        [Explicit]
         public void Error_Unsupported()
         {
             var status = Status.Ignore;
-            var toolManager = new ToolManager();
+            var toolManager = MockRepository.GenerateStrictMock<IToolManager>();
             var formatManager = new FormatManager(toolManager);
             var inputFileName = Path.GetTempFileName();
             try
@@ -82,7 +106,7 @@ namespace MD.Net.Tests
                 var outputFileName = formatManager.Convert(inputFileName, Compression.LP2, status);
                 Assert.Fail();
             }
-            catch (ToolException e)
+            catch (WaveFormatException e)
             {
                 Assert.IsTrue(e.Message.Contains("unsupported", true));
             }
