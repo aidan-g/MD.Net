@@ -74,8 +74,8 @@ namespace MD.Net
                 //Nothing to do.
                 return fileName;
             }
-            var result = Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName) + ".at3");
-            var process = this.ToolManager.Start(Tools.ATRACDENC, string.Format("{0} {1} {2} \"{3}\" {4} \"{5}\" {6} {7}", Constants.ATRACDENC_ENCODE, Constants.ATRACDENC_ATRAC3, Constants.ATRACDENC_INPUT, fileName, Constants.ATRACDENC_OUTPUT, result, Constants.ATRACDENC_BITRATE, bitrate));
+            var temp = this.ToolManager.GetTempFileName(".at3");
+            var process = this.ToolManager.Start(Tools.ATRACDENC, string.Format("{0} {1} {2} \"{3}\" {4} \"{5}\" {6} {7}", Constants.ATRACDENC_ENCODE, Constants.ATRACDENC_ATRAC3, Constants.ATRACDENC_INPUT, fileName, Constants.ATRACDENC_OUTPUT, temp, Constants.ATRACDENC_BITRATE, bitrate));
             using (var emitter = new PercentStatusEmitter(string.Format(Strings.FormatManager_Description, Path.GetFileName(fileName)), StatusType.Encode, ATRACDENC_PROGRESS, status))
             {
                 var error = new StringBuilder();
@@ -85,11 +85,24 @@ namespace MD.Net
                     this.ToolManager.Throw(process, error.ToString());
                 }
             }
-            if (File.Exists(result))
+            if (File.Exists(temp))
             {
-                result = this.ConvertOmaToWav(result);
+                var result = Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName) + ".at3.wav");
+                this.ConvertOmaToWav(temp, result);
+                try
+                {
+                    File.Delete(temp);
+                }
+                catch
+                {
+                    //Nothing can be done.
+                }
+                return result;
             }
-            return result;
+            else
+            {
+                return temp;
+            }
         }
 
         protected virtual bool IsAtrac(string fileName, string bitrate)
@@ -118,10 +131,9 @@ namespace MD.Net
             return false;
         }
 
-        protected virtual string ConvertOmaToWav(string fileName)
+        protected virtual void ConvertOmaToWav(string inputFileName, string outputFileName)
         {
-            var result = Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName) + ".at3.wav");
-            using (var reader = File.OpenRead(fileName))
+            using (var reader = File.OpenRead(inputFileName))
             {
                 var omaInfo = default(OMAHeader.OMAInfo);
                 if (OMAHeader.Read(reader, out omaInfo))
@@ -135,7 +147,7 @@ namespace MD.Net
                     wavInfo.BlockAlign = omaInfo.Framesize;
                     wavInfo.BitsPerSample = 0;
                     wavInfo.DataSize = global::System.Convert.ToInt32(reader.Length - reader.Position);
-                    using (var writer = File.Create(result))
+                    using (var writer = File.Create(outputFileName))
                     {
                         if (!WavHeader.Write(writer, wavInfo))
                         {
@@ -149,15 +161,6 @@ namespace MD.Net
                     throw new InvalidOperationException("OMA header could not be read.");
                 }
             }
-            try
-            {
-                File.Delete(fileName);
-            }
-            catch
-            {
-                //Nothing can be done.
-            }
-            return result;
         }
 
         protected virtual WaveFormat GetFormat(string fileName)

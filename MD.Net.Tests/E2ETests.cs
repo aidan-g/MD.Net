@@ -43,7 +43,7 @@ namespace MD.Net.Tests
             Assert.AreEqual(ResultStatus.Success, result.Status);
 
             currentDisc = DiscManager.Default.GetDisc(device);
-            Assert.AreEqual(string.Empty, currentDisc.Title);
+            Assert.AreEqual(Constants.UNTITLED, currentDisc.Title);
             Assert.AreEqual(0, currentDisc.Tracks.Count);
         }
 

@@ -1,6 +1,7 @@
 ﻿using MD.Net.Resources;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 
 namespace MD.Net
@@ -58,6 +59,14 @@ namespace MD.Net
         public void Throw(Process process, string message)
         {
             throw new ToolException(process.StartInfo.FileName, process.StartInfo.Arguments, process.ExitCode, message);
+        }
+
+        public string GetTempFileName(string extension)
+        {
+            unchecked
+            {
+                return Path.Combine(Path.GetTempPath(), Math.Abs(DateTime.Now.Ticks) + extension);
+            }
         }
 
         public static IToolManager Default

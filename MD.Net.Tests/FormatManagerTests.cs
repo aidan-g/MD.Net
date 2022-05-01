@@ -79,6 +79,7 @@ namespace MD.Net.Tests
         public void Convert(string inputFileName, string outputFileName, Compression compression, string bitrate)
         {
             var toolManager = MockRepository.GenerateStrictMock<IToolManager>();
+            toolManager.Expect(tm => tm.GetTempFileName(".at3")).Return(outputFileName);
             toolManager.Expect(tm => tm.Start(Tools.ATRACDENC, string.Format("{0} {1} {2} \"{3}\" {4} \"{5}\" {6} {7}", Constants.ATRACDENC_ENCODE, Constants.ATRACDENC_ATRAC3, Constants.ATRACDENC_INPUT, inputFileName, Constants.ATRACDENC_OUTPUT, outputFileName, Constants.ATRACDENC_BITRATE, bitrate)));
             toolManager.Expect(tm => tm.Exec(Arg<Process>.Is.Anything, Arg<Action<string>>.Is.Anything, Arg<Action<string>>.Is.Anything)).WhenCalled(invocation =>
             {

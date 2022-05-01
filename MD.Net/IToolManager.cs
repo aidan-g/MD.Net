@@ -12,5 +12,7 @@ namespace MD.Net
         int Exec(Process process, Action<string> outputHandler, Action<string> errorHandler);
 
         void Throw(Process process, string message);
+
+        string GetTempFileName(string extension);
     }
 }

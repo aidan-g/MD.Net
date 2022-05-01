@@ -2,6 +2,9 @@
 {
     public class Constants
     {
+        //Not sure where this is actually defined.
+        public const string UNTITLED = "<Untitled>";
+
         public const string NETMDCLI_NO_DEVICE = "no netmd device";
 
         public const string NETMDCLI_POLL_FAILED = "netmd_poll failed";
