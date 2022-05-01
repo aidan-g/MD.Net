@@ -65,7 +65,7 @@ namespace MD.Net
         {
             unchecked
             {
-                return Path.Combine(Path.GetTempPath(), Math.Abs(DateTime.Now.Ticks) + extension);
+                return Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("n") + extension);
             }
         }
 
