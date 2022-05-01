@@ -59,6 +59,14 @@ namespace MD.Net
         {
             throw new ToolException(process.StartInfo.FileName, process.StartInfo.Arguments, process.ExitCode, message);
         }
+
+        public static IToolManager Default
+        {
+            get
+            {
+                return new ToolManager();
+            }
+        }
     }
 
     public class ToolException : Exception

@@ -187,6 +187,14 @@ namespace MD.Net
             return WaveFormat.None;
         }
 
+        public static IFormatManager Default
+        {
+            get
+            {
+                return new FormatManager(global::MD.Net.ToolManager.Default);
+            }
+        }
+
         public enum WaveFormat : byte
         {
             None,

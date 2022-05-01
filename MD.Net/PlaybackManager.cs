@@ -129,5 +129,13 @@ namespace MD.Net
                 this.ToolManager.Throw(process, error);
             }
         }
+
+        public static IPlaybackManager Default
+        {
+            get
+            {
+                return new PlaybackManager(global::MD.Net.ToolManager.Default);
+            }
+        }
     }
 }

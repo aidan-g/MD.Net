@@ -33,7 +33,7 @@ namespace MD.Net
                 {
                     return this.IsValidPCM(info, out length);
                 }
-                else if(info.Format == WavHeader.WAV_FORMAT_ATRAC3)
+                else if (info.Format == WavHeader.WAV_FORMAT_ATRAC3)
                 {
                     return this.IsValidATRAC(info, out length);
                 }
@@ -96,6 +96,14 @@ namespace MD.Net
                 }
             }
             return true;
+        }
+
+        public static IFormatValidator Default
+        {
+            get
+            {
+                return new FormatValidator();
+            }
         }
     }
 }

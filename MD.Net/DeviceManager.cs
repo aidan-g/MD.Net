@@ -49,6 +49,14 @@ namespace MD.Net
             return Result.Success;
         }
 
+        public static IDeviceManager Default
+        {
+            get
+            {
+                return new DeviceManager(global::MD.Net.ToolManager.Default);
+            }
+        }
+
 #pragma warning disable 0169, 0649
 
         private struct _Device

@@ -13,7 +13,7 @@ namespace MD.Net.Tests
             using (var reader = Resources.Track_001)
             {
                 var result = WavHeader.Read(reader, out info);
-                Assert.AreEqual(53785552, info.FileSize);
+                Assert.AreEqual(53745588, info.FileSize);
                 Assert.AreEqual(WavHeader.WAV_FORMAT_PCM, info.Format);
                 Assert.AreEqual(2, info.ChannelCount);
                 Assert.AreEqual(44100, info.SampleRate);
@@ -78,7 +78,7 @@ namespace MD.Net.Tests
         public void Write_WAV()
         {
             var info = default(WavHeader.WavInfo);
-            info.FileSize = 53785552;
+            info.FileSize = 53745588;
             info.Format = WavHeader.WAV_FORMAT_PCM;
             info.ChannelCount = 2;
             info.SampleRate = 44100;

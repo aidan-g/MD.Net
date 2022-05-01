@@ -120,6 +120,14 @@ namespace MD.Net
             return true;
         }
 
+        public static IDiscManager Default
+        {
+            get
+            {
+                return new DiscManager(global::MD.Net.ToolManager.Default, global::MD.Net.FormatValidator.Default);
+            }
+        }
+
 #pragma warning disable 0169, 0649
 
         private struct _Disc

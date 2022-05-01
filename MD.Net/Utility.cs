@@ -107,12 +107,22 @@ namespace MD.Net
 
         public static int LEWord32(byte[] buffer, int index)
         {
-            return (buffer[index + 3] << 24) + (buffer[index + 2] << 16) + (buffer[index + 1] << 8) + buffer[index + 0];
+            if (!BitConverter.IsLittleEndian)
+            {
+                buffer = CopyAndReverse(buffer, index, 4);
+                index = 0;
+            }
+            return BitConverter.ToInt32(buffer, index);
         }
 
         public static int LEWord16(byte[] buffer, int index)
         {
-            return buffer[index + 1] * 256 + buffer[index + 0];
+            if (!BitConverter.IsLittleEndian)
+            {
+                buffer = CopyAndReverse(buffer, index, 2);
+                index = 0;
+            }
+            return BitConverter.ToInt16(buffer, index);
         }
 
         public static byte[] LEWord32(int value)
@@ -159,6 +169,14 @@ namespace MD.Net
                 }
             }
             return true;
+        }
+
+        public static T[] CopyAndReverse<T>(T[] buffer, int index, int length)
+        {
+            var result = new T[length];
+            Array.Copy(buffer, index, result, 0, length);
+            Array.Reverse(result);
+            return result;
         }
     }
 }

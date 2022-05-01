@@ -101,5 +101,13 @@ namespace MD.Net
         {
             actions.Add(new RemoveTrackAction(device, currentDisc, updatedDisc, track));
         }
+
+        public static IActionBuilder Default
+        {
+            get
+            {
+                return new ActionBuilder(global::MD.Net.FormatManager.Default);
+            }
+        }
     }
 }

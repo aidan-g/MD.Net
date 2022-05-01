@@ -27,29 +27,22 @@ namespace MD.Net.Tests
         [Test]
         public void Test001()
         {
-            var toolManager = new ToolManager();
-            var formatValidator = new FormatValidator();
-            var formatManager = new FormatManager(toolManager);
-            var deviceManager = new DeviceManager(toolManager);
-            var discManager = new DiscManager(toolManager, formatValidator);
-
-            var device = deviceManager.GetDevices().SingleOrDefault();
-            var currentDisc = discManager.GetDisc(device);
+            var device = DeviceManager.Default.GetDevices().SingleOrDefault();
+            var currentDisc = DiscManager.Default.GetDisc(device);
             var updatedDisc = currentDisc.Clone();
 
             updatedDisc.Title = string.Empty;
             updatedDisc.Tracks.Clear();
 
-            var actionBuilder = new ActionBuilder(formatManager);
-            var actions = actionBuilder.GetActions(device, currentDisc, updatedDisc);
+            var actions = ActionBuilder.Default.GetActions(device, currentDisc, updatedDisc);
 
             //Change title, remove existing tracks.
             Assert.AreEqual(currentDisc.Tracks.Count + 1, actions.Count);
 
-            var result = discManager.ApplyActions(device, actions, this.Status, true);
+            var result = DiscManager.Default.ApplyActions(device, actions, this.Status, true);
             Assert.AreEqual(ResultStatus.Success, result.Status);
 
-            currentDisc = discManager.GetDisc(device);
+            currentDisc = DiscManager.Default.GetDisc(device);
             Assert.AreEqual(string.Empty, currentDisc.Title);
             Assert.AreEqual(0, currentDisc.Tracks.Count);
         }
@@ -59,14 +52,8 @@ namespace MD.Net.Tests
         [TestCase(Compression.LP4)]
         public void Test002(Compression compression)
         {
-            var toolManager = new ToolManager();
-            var formatValidator = new FormatValidator();
-            var formatManager = new FormatManager(toolManager);
-            var deviceManager = new DeviceManager(toolManager);
-            var discManager = new DiscManager(toolManager, formatValidator);
-
-            var device = deviceManager.GetDevices().SingleOrDefault();
-            var currentDisc = discManager.GetDisc(device);
+            var device = DeviceManager.Default.GetDevices().SingleOrDefault();
+            var currentDisc = DiscManager.Default.GetDisc(device);
             var updatedDisc = currentDisc.Clone();
             var title = "MD.Net.Tests - " + Math.Abs(DateTime.Now.Ticks);
 
@@ -86,16 +73,15 @@ namespace MD.Net.Tests
                 track.Name = "MD.Net.Tests - " + updatedDisc.Tracks.Count;
             }
 
-            var actionBuilder = new ActionBuilder(formatManager);
-            var actions = actionBuilder.GetActions(device, currentDisc, updatedDisc);
+            var actions = ActionBuilder.Default.GetActions(device, currentDisc, updatedDisc);
 
             //Change title, remove existing tracks, add 3 new tracks.
             Assert.AreEqual(currentDisc.Tracks.Count + 4, actions.Count);
 
-            var result = discManager.ApplyActions(device, actions, this.Status, true);
+            var result = DiscManager.Default.ApplyActions(device, actions, this.Status, true);
             Assert.AreEqual(ResultStatus.Success, result.Status);
 
-            currentDisc = discManager.GetDisc(device);
+            currentDisc = DiscManager.Default.GetDisc(device);
             Assert.AreEqual(title, currentDisc.Title);
             Assert.AreEqual(3, currentDisc.Tracks.Count);
             Assert.AreEqual("MD.Net.Tests - 1", currentDisc.Tracks[0].Name);
