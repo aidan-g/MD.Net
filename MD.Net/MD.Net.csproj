@@ -4,7 +4,7 @@
     <TargetFrameworks>net40;net462</TargetFrameworks>
     <AssemblyName>MD.Net</AssemblyName>
     <OutputPath>..\distribution\</OutputPath>
-    <Version>0.0.4</Version>
+    <Version>0.0.5</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Platforms>AnyCPU</Platforms>
     <Configurations>Debug;Release</Configurations>
